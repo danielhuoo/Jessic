@@ -16,8 +16,8 @@ import { mapActions, mapMutations, mapState } from "vuex";
 export default {
     data() {
         return {
-            username: "15602298828",
-            password: "82216118"
+            username: "",
+            password: ""
         };
     },
 
