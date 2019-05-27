@@ -1,4 +1,4 @@
-# music-app
+# Jessic
 
 ## Project setup
 ```

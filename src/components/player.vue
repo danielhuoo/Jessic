@@ -63,7 +63,7 @@ export default {
         playingSrc: function() {
             this.isPlaying = false;
             this.$refs.audio.load();
-            this.playOrPause();
+            this.playSong()
         },
 
         listIsReady: function() {

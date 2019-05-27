@@ -1,6 +1,8 @@
 export default {
     namespaced: true,
     state: {
+        username: null,
+        password: null,
         isSucceed: false,
         uid: null,
     },
@@ -11,16 +13,21 @@ export default {
 
         updateLoginStatus(state, payload) {
             state.isSucceed = payload.isSucceed
+        },
+
+        updateUserNameNPwd(state, payload) {
+            state.username = payload.username
+            state.password = payload.password
         }
 
     },
     actions: {
-        login({ dispatch, commit, rootState }) {
+        login({ commit, rootState, state }) {
             axios
                 .get(rootState.api.login, {
                     params: {
-                        phone: 15602298828,
-                        password: 82216118
+                        phone: state.username,
+                        password: state.password
                     },
                     withCredentials: true
                 })
@@ -31,7 +38,6 @@ export default {
                         commit('updateLoginStatus', { isSucceed: true })
                         commit('updateUserInfo', { uid: res.account.id });
                     }
-                    // dispatch('songList/getLikeList', {}, { root: true })
                 });
         },
 

@@ -42,8 +42,8 @@ export default {
         tableRowClassName({ row, rowIndex }) {
             if (rowIndex === this.playingIndex) {
                 return "playingSong";
-            } else {
-                return "";
+            } else if (!row.songUrl) {
+                return "songUnavailable";
             }
         }
     },
@@ -56,5 +56,9 @@ export default {
 <style>
 .el-table .playingSong {
     color: #409eff;
+}
+
+.songUnavailable {
+    color: #C0C4CC;
 }
 </style>
