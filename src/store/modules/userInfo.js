@@ -19,8 +19,8 @@ export default {
             axios
                 .get(rootState.api.login, {
                     params: {
-                        phone: 15602298828,
-                        password: 82216118
+                        phone: '',
+                        password: ''
                     },
                     withCredentials: true
                 })
