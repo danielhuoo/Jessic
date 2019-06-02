@@ -4,8 +4,9 @@ import './plugins/element.js'
 import store from './store/'
 import router from './router/'
 import App from './App.vue'
+// import log4Test from './tools/'
 Vue.config.productionTip = false
-
+// Vue.use(log4Test);
 
 new Vue({
   store,

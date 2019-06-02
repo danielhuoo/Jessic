@@ -6,7 +6,9 @@ export default {
         playingSrc: null,
         playingName: null,
         playingSinger: null,
-        playingAlbumPicUrl: null
+        playingAlbumPicUrl: null,
+
+        isShowLivePage:false
     },
     mutations: {
         updatePlayingInfo(state, payload) {
@@ -17,6 +19,10 @@ export default {
             state.playingName = payload.name
             state.playingSinger = payload.ar[0].name
             state.playingAlbumPicUrl = payload.al.picUrl
+        },
+
+        updateShowLivePage(state, payload){
+            state.isShowLivePage = payload
         }
     }
 }

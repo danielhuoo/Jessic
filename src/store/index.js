@@ -4,6 +4,7 @@ import userInfo from './modules/userInfo'
 import songList from './modules/songList'
 import player from './modules/player'
 import sidebar from './modules/sidebar'
+import color from './modules/color'
 import api from '../api'
 Vue.use(Vuex)
 
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     userInfo,
     songList,
     player,
-    sidebar
+    sidebar,
+    color
   },
   state: {
     api: api

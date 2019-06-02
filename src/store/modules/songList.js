@@ -2,11 +2,34 @@ export default {
     namespaced: true,
     state: {
         isReady: false,
-        likeSongs: []
+        currentSongs: [],
+
+        selectedListIndex: 0, // not the unique id
+        playListInfo: []
     },
     mutations: {
-        updateLikeSongs(state, payload) {
-            state.likeSongs = payload.likeSongs
+        updateCurrentSongs(state, payload) {
+            state.currentSongs = payload.currentSongs
+        },
+
+        updateSelectedListIndex(state, payload) {
+            state.selectedListIndex = payload.selectedListIndex
+        },
+
+        updatePlayListInfo(state, payload) {
+            let list = payload.playListInfo
+            let i = 0
+            let len = list.length
+            for (; i < len; i++) {
+                list[i].index4El = i.toString()
+            }
+
+            // console.log(list)
+            state.playListInfo = list
+        },
+
+        notReady(state) {
+            state.isReady = false
         },
 
         getReady(state) {
@@ -14,23 +37,55 @@ export default {
         }
     },
     actions: {
-        getLikeList({ dispatch, rootState }) {
-            console.log('getLikeList')
+        getPlayListInfo({ rootState, commit }) {
+            console.log('getPlayListInfo')
             axios
-                .get(rootState.api.getLikeList, {
+                .get(rootState.api.getPlayListInfo, {
                     params: {
-                        uid: rootState.userInfo.uid
+                        uid: rootState.userInfo.uid,
                     },
                     withCredentials: true
                 })
                 .then(function (response) {
+                    const res = response.data;
+                    // console.log(res)
+
+                    commit('updatePlayListInfo', {
+                        playListInfo: res.playlist
+                    })
+                });
+        },
+
+        getPlayListDetail({ state, commit, rootState, dispatch }) {
+            commit('notReady')
+            console.log('getPlayListDetail')
+            const id = state.playListInfo[state.selectedListIndex].id
+            axios
+                .get(rootState.api.getPlayListDetail, {
+                    params: {
+                        id: id
+                    },
+                    withCredentials: true
+                })
+                .then(function (response) {
+                    let res = response.data
+                    console.log(res)
                     dispatch('getSongsList', { res: response.data })
                 })
         },
 
         getSongsList({ commit, rootState, dispatch }, params) {
             console.log('getSongsList')
-            const ids = params.res.ids.sort(function (a, b) {
+
+            let ids = []
+            const items = params.res.privileges
+            let i = 0
+            let len = items.length
+            for (; i < len; i++) {
+                ids.push(items[i].id)
+            }
+
+            ids = ids.sort(function (a, b) {
                 return a - b
             }).toString()
 
@@ -43,8 +98,8 @@ export default {
                 })
                 .then(function (response) {
                     let res = response.data;
-                    commit('updateLikeSongs', {
-                        likeSongs: res.songs
+                    commit('updateCurrentSongs', {
+                        currentSongs: res.songs
                     })
 
                     dispatch('getSongUrl', { res: ids })
@@ -68,7 +123,7 @@ export default {
         handleSongUrl({ state, commit }, params) {
             console.log('handleSongUrl')
 
-            let likeSongs = state.likeSongs
+            let currentSongs = state.currentSongs
             let data = params.data.sort(function (a, b) {
                 return a.id - b.id
             })
@@ -77,18 +132,17 @@ export default {
             let len = data.length
             for (let i = 0; i < len; i++) {
                 if (data[i].url) {
-                    likeSongs[i].songUrl = "http://m10c" + data[i].url.substring(10)
+                    currentSongs[i].songUrl = "http://m10c" + data[i].url.substring(10)
                 } else {
-                    likeSongs[i].songUrl = ''
+                    currentSongs[i].songUrl = ''
                 }
-                likeSongs[i].index = i
+                currentSongs[i].index = i
             }
 
-            commit('updateLikeSongs', {
-                likeSongs: likeSongs
+            commit('updateCurrentSongs', {
+                currentSongs: currentSongs
             })
             commit('getReady')
         }
-
     }
 }

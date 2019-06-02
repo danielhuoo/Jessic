@@ -1,54 +1,90 @@
 <template>
     <div>
-        <el-container v-bind:style="containerHeight">
-            <el-aside width="200px">
-                <sidebar></sidebar>
-            </el-aside>
+        <el-carousel
+            :height="containerHeight"
+            direction="vertical"
+            :autoplay="false"
+            ref="carousel"
+            indicator-position="none"
+        >
+            <el-carousel-item name="normalPage">
+                <el-container>
+                    <el-header v-bind:class="bgc" v-if="false">
+                        <headbar></headbar>
+                    </el-header>
+                    <el-container>
+                        <el-aside
+                            v-bind:style="{width:'250px',height: containerHeight}"
+                            v-bind:class="bgc"
+                        >
+                            <sidebar></sidebar>
+                        </el-aside>
 
-            <el-main>
-                <keep-alive>
-                    <component v-bind:is="selectedSideBar"></component>
-                </keep-alive>
-            </el-main>
-        </el-container>
+                        <el-main v-bind:class="bgc">
+                            <keep-alive>
+                                <component v-bind:is="currentPage"></component>
+                            </keep-alive>
+                        </el-main>
+                    </el-container>
+                </el-container>
+            </el-carousel-item>
+            <el-carousel-item name="livePage">
+                <live></live>
+            </el-carousel-item>
+        </el-carousel>
 
-        <player></player>
+        <player v-bind:class="bgc"></player>
     </div>
 </template>
 <script>
 import sidebar from "../../components/sidebar";
 import player from "../../components/player";
-import likeList from "../../components/likeList";
+import songList from "../../components/songList";
+import live from "../../components/live";
+import headbar from "../../components/headbar";
 import { mapActions, mapState, mapMutations } from "vuex";
 export default {
     components: {
-        likeList,
+        songList,
         sidebar,
-        player
+        player,
+        live,
+        headbar
     },
     data() {
         return {
             timer: false,
             playerHeight: 80,
-            windowHeight: document.documentElement.clientHeight
+            windowHeight: document.documentElement.clientHeight,
+            windowWidth: document.documentElement.clientWidth,
+            currentPage: "songList"
         };
     },
     computed: {
         containerHeight: function() {
-            return {
-                height: this.windowHeight - this.playerHeight + "px"
-            };
+            return this.windowHeight - this.playerHeight + "px";
         },
         ...mapState("sidebar", {
             selectedSideBar: state => state.selectedSideBar
+        }),
+
+        ...mapState("player", {
+            isShowLivePage: state => state.isShowLivePage
+        }),
+
+        ...mapState("color", {
+            bgc: state => state.bgc
         })
     },
 
-    mounted() {
-        this.updateSelectedSideBar({
-            selectedSideBar: "likeList"
-        });
-        this.initWindowResizeEvt();
+    watch: {
+        isShowLivePage: function() {
+            if (this.isShowLivePage) {
+                this.$refs.carousel.setActiveItem("livePage");
+            } else {
+                this.$refs.carousel.setActiveItem("normalPage");
+            }
+        }
     },
 
     methods: {
@@ -61,20 +97,38 @@ export default {
                 }, 400);
             };
         }
+    },
+
+    mounted() {
+        this.initWindowResizeEvt();
     }
 };
 </script>
 
 <style lang="scss">
+* {
+    user-select: none;
+}
+.bgc-night {
+    color: #ffffff;
+    background-color: #282828 !important;
+}
+
+.bgc-day {
+    background-color: #ffffff;
+}
+
 .el-aside {
-    background-color: rgb(230, 230, 230);
+    background-color: #e6e6e6;
 }
 
 .el-main {
-    padding: 10px !important;
+    background-color: #ffffff;
+    padding: 0;
 }
 
 .player {
-    height: 80px;
+    // height: 80px;
+    // border: 1px solid red
 }
 </style>

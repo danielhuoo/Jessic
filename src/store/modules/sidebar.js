@@ -1,11 +1,11 @@
 export default {
     namespaced: true,
     state: {
-        selectedSideBar: null
+        // selectedSideBar: null
     },
     mutations: {
-        updateSelectedSideBar(state, payload) {
-            state.selectedSideBar = payload.selectedSideBar
-        }
+        // updateSelectedSideBar(state, payload) {
+        //     state.selectedSideBar = payload.selectedSideBar
+        // }
     }
 }
