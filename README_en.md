@@ -38,6 +38,10 @@ Late outlook:
 This project is my personal project. I will continually update and add new features and optimizations.
 Anyway, this project is for practice purposes, so it is impossible to be perfect. 
 
+## To start
+You need to deploy the service of api interface.
+Directly clone the [repository](https://github.com/danielhuoo/NeteaseCloudMusicApi) which I had already edited and run.
+
 ## setup
 ```
 npm install

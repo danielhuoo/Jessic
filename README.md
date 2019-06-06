@@ -2,7 +2,7 @@
 
 一款基于Vue的网易云音乐播放器
 
-语言：中文 | [英文](README_en.md)
+Languages：中文 | [English](README_en.md)
 
 这是一个PC端的在线音乐播放器，后端数据取自网易云音乐。API接口来自：[网易云音乐 API](https://github.com/Binaryify/NeteaseCloudMusicApi).
 
@@ -36,6 +36,9 @@
 
 这个项目是我的个人项目。我会不断地更新，加入新的功能和优化。
 Anyway， 这个项目是以练习为目的的，所以不可能做到十全十美。有兴趣的同学可以多交流交流。
+
+## 前提
+需要搭配api接口服务，直接clone我修改好的[库](https://github.com/danielhuoo/NeteaseCloudMusicApi)，运行即可
 
 
 ## 安装 setup
