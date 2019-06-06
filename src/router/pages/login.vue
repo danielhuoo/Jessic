@@ -6,7 +6,9 @@
                 <el-input class="inputs" v-model="username" placeholder="请输入账号"></el-input>
                 <el-input class="inputs" placeholder="请输入密码" v-model="password" show-password></el-input>
                 <el-button class="loginBtn" type="primary" round @click="loginBtn">登录</el-button>
+                <el-link class="logasVisitor" @click="loginAsVisitors">Login as visitors</el-link>
             </div>
+        
         </div>
     </div>
 </template>
@@ -49,6 +51,13 @@ export default {
             });
             this.username = "";
             this.password = "";
+        },
+
+        loginAsVisitors(){
+            this.username = '18002280851'
+            this.password = 'abc12345'
+
+            this.loginBtn()
         }
     }
 };
@@ -92,5 +101,11 @@ export default {
     display: inline-block;
     text-align: center;
     margin-bottom: 10px;
+}
+
+.logasVisitor{
+    width: 100%;
+    color: white;
+    margin-top: 5px;
 }
 </style>
