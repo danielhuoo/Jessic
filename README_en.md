@@ -1,10 +1,18 @@
 # Jessic
 
+A NetEase music player based on Vue
+
 语言：[Chinese](README.md) | English
 
 This is an online music player of Desktop, whose data is fetched from NetEase Music. The Api interfaces are provided by [API](https://github.com/Binaryify/NeteaseCloudMusicApi).
 
 You can have a look at [Demo](http://35.242.163.122/).
+
+## Interface
+
+![login.png](http://psb5eq4ez.bkt.clouddn.com/Jessic/login.png)
+
+![main.png](http://psb5eq4ez.bkt.clouddn.com/Jessic/main.png)
 
 This project is for practicing Vue. It takes me about two weeks. Although there are not many functions implemented, they are also complex and critical functions, including song playback, song selection, and switching song lists.
 

@@ -1,10 +1,18 @@
 # Jessic
 
+一款基于Vue的网易云音乐播放器
+
 语言：中文 | [英文](README_en.md)
 
 这是一个PC端的在线音乐播放器，后端数据取自网易云音乐。API接口来自：[网易云音乐 API](https://github.com/Binaryify/NeteaseCloudMusicApi).
 
 你可以看看[Demo](http://35.242.163.122/)。
+
+## 界面
+
+![login.png](http://psb5eq4ez.bkt.clouddn.com/Jessic/login.png)
+
+![main.png](http://psb5eq4ez.bkt.clouddn.com/Jessic/main.png)
 
 这个项目是我为了练习Vue而搭建的，前后花了两个星期。实现的功能不多，但也是比较复杂和关键的功能，包括歌曲播放、选歌、切换歌单等。
 使用的技术栈：Vue, Vuex, Vue-router, elementUI, axios, sass。
