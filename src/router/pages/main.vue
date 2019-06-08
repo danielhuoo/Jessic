@@ -90,7 +90,7 @@ export default {
     methods: {
         ...mapMutations("sidebar", ["updateSelectedSideBar"]),
         initWindowResizeEvt() {
-            let that = this;
+            const that = this;
             window.onresize = function() {
                 setTimeout(function() {
                     that.windowHeight = document.documentElement.clientHeight;

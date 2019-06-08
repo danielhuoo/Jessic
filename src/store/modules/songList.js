@@ -76,12 +76,9 @@ export default {
 
         getSongsList({ commit, rootState, dispatch }, params) {
             console.log('getSongsList')
-
-            let ids = []
             const items = params.res.privileges
-            let i = 0
-            let len = items.length
-            for (; i < len; i++) {
+            let ids = []
+            for (let i = 0, len = items.length; i < len; i++) {
                 ids.push(items[i].id)
             }
 
@@ -97,7 +94,7 @@ export default {
                     withCredentials: true
                 })
                 .then(function (response) {
-                    let res = response.data;
+                    const res = response.data;
                     commit('updateCurrentSongs', {
                         currentSongs: res.songs
                     })
@@ -129,8 +126,7 @@ export default {
             })
             // console.log(data)
 
-            let len = data.length
-            for (let i = 0; i < len; i++) {
+            for (let i = 0, len = data.length; i < len; i++) {
                 if (data[i].url) {
                     currentSongs[i].songUrl = "http://m10c" + data[i].url.substring(10)
                 } else {

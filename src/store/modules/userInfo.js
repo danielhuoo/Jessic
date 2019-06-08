@@ -55,7 +55,7 @@ export default {
                 });
         },
 
-        getUserDetail({ commit, rootState, state }, params) {
+        getUserDetail({ commit, rootState }, params) {
             axios
                 .get(rootState.api.getUserDetail, {
                     params: {

@@ -119,33 +119,31 @@ export default {
         }),
 
         displayCurrentTime: function() {
-            let d = moment.duration(this.playing_currentTime, "seconds");
-            let minute = handleFormat(d.minutes());
-            let second = handleFormat(d.seconds());
-
-            function handleFormat(val) {
+            const handleFormat = function(val) {
                 if (val < 10) {
                     val = "0" + val;
                 }
 
                 return val;
-            }
+            };
+            let d = moment.duration(this.playing_currentTime, "seconds");
+            let minute = handleFormat(d.minutes());
+            let second = handleFormat(d.seconds());
 
             return minute + ":" + second;
         },
 
         displayDuration: function() {
-            let d = moment.duration(this.playing_duration, "seconds");
-            let minute = handleFormat(d.minutes());
-            let second = handleFormat(d.seconds());
-
-            function handleFormat(val) {
+            const handleFormat = function(val) {
                 if (val < 10) {
                     val = "0" + val;
                 }
 
                 return val;
-            }
+            };
+            let d = moment.duration(this.playing_duration, "seconds");
+            let minute = handleFormat(d.minutes());
+            let second = handleFormat(d.seconds());
 
             return minute + ":" + second;
         }
