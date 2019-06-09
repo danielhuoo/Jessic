@@ -18,9 +18,7 @@ export default {
 
         updatePlayListInfo(state, payload) {
             let list = payload.playListInfo
-            let i = 0
-            let len = list.length
-            for (; i < len; i++) {
+            for (let i = 0, len = list.length; i < len; i++) {
                 list[i].index4El = i.toString()
             }
 
@@ -46,7 +44,7 @@ export default {
                     },
                     withCredentials: true
                 })
-                .then(function (response) {
+                .then(response => {
                     const res = response.data;
                     // console.log(res)
 
@@ -67,8 +65,8 @@ export default {
                     },
                     withCredentials: true
                 })
-                .then(function (response) {
-                    let res = response.data
+                .then(response => {
+                    const res = response.data
                     console.log(res)
                     dispatch('getSongsList', { res: response.data })
                 })
@@ -82,9 +80,7 @@ export default {
                 ids.push(items[i].id)
             }
 
-            ids = ids.sort(function (a, b) {
-                return a - b
-            }).toString()
+            ids = ids.sort((a, b) => a - b).toString()
 
             axios
                 .get(rootState.api.getSongDetail, {
@@ -93,7 +89,7 @@ export default {
                     },
                     withCredentials: true
                 })
-                .then(function (response) {
+                .then(response => {
                     const res = response.data;
                     commit('updateCurrentSongs', {
                         currentSongs: res.songs
@@ -112,7 +108,7 @@ export default {
                     },
                     withCredentials: true
                 })
-                .then(function (response) {
+                .then(response => {
                     dispatch('handleSongUrl', response.data)
                 })
         },
@@ -121,9 +117,7 @@ export default {
             console.log('handleSongUrl')
 
             let currentSongs = state.currentSongs
-            let data = params.data.sort(function (a, b) {
-                return a.id - b.id
-            })
+            let data = params.data.sort((a, b) => a.id - b.id)
             // console.log(data)
 
             for (let i = 0, len = data.length; i < len; i++) {

@@ -1,4 +1,3 @@
-
 export default {
     namespaced: true,
     state: {
@@ -45,7 +44,7 @@ export default {
                     },
                     withCredentials: true
                 })
-                .then(function (response) {
+                .then(response => {
                     const res = response.data;
                     // console.log(res)
                     if (res.code === 200) {
@@ -63,7 +62,7 @@ export default {
                     },
                     withCredentials: true
                 })
-                .then(function (response) {
+                .then(response => {
                     const res = response.data;
                     // console.log(res)
                     res.uid = params.uid

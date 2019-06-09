@@ -119,7 +119,7 @@ export default {
         }),
 
         displayCurrentTime: function() {
-            const handleFormat = function(val) {
+            const handleFormat = val => {
                 if (val < 10) {
                     val = "0" + val;
                 }
@@ -134,7 +134,7 @@ export default {
         },
 
         displayDuration: function() {
-            const handleFormat = function(val) {
+            const handleFormat = val => {
                 if (val < 10) {
                     val = "0" + val;
                 }
@@ -159,7 +159,6 @@ export default {
 
         // It is the main method
         playSong() {
-            const that = this;
             clearInterval(this.timer);
             if (!this.playingSrc) {
                 this.$notify({
@@ -167,8 +166,8 @@ export default {
                     message: "暂时听不了了,只能试试其他歌曲了"
                 });
 
-                this.timer = setTimeout(function() {
-                    that.nextSong();
+                this.timer = setTimeout(() => {
+                    this.nextSong();
                 }, 1000);
             } else {
                 this.playOrPause();

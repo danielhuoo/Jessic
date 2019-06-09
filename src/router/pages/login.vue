@@ -18,8 +18,11 @@ import { mapActions, mapMutations, mapState } from "vuex";
 export default {
     data() {
         return {
-            username: "",
-            password: ""
+            // username: "18002280851",
+            // password: "abc12345",
+
+            username: "15602298828",
+            password: "82216118",
         };
     },
 
@@ -38,7 +41,7 @@ export default {
     },
 
     mounted() {
-        // this.loginBtn();
+        this.loginBtn();
     },
 
     methods: {

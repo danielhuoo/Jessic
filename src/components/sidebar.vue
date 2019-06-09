@@ -90,7 +90,7 @@ export default {
                     this.removeLoginInfo();
                     this.$router.push("/login");
                 })
-                .catch(() => {});
+                .catch();
         }
     },
     mounted() {
