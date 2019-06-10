@@ -22,11 +22,11 @@ It is worth mentioning that this is the first time that I introduced Vuex in the
 
 The currently known bugs are:
 
-1. Playing a song will throw a DOM exception, but it will not affect the playback effect.
+1. ~~Playing a song will throw a DOM exception, but it will not affect the playback effect.~~(I will then write details about it.)
 2. After switching the song list, the song list is not well rendered, but does not affect playback.
 3. After logging in for a certain period of time, the song will not be played. I think it is related to the login status expiration time. Need to refresh the page or log in again.
 4. Lack of test samples, resulting in most abnormal conditions not being processed
-5. Songs cannot be played on Safari.
+5. ~~Songs cannot be played on Safari.~~
 
 Late outlook:
 1. It is possible to integrate the api interface into the project to avoid deploying a set of API services.
