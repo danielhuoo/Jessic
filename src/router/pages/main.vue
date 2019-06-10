@@ -105,9 +105,10 @@ export default {
 </script>
 
 <style lang="scss">
-* {
+*:not(input) {
     user-select: none;
 }
+
 .bgc-night {
     color: #ffffff;
     background-color: #282828 !important;

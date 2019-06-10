@@ -9,5 +9,6 @@ const routes = [
 ]
 
 export default new VueRouter({
+    mode: 'history',// remove '#' inside the url
     routes
 })

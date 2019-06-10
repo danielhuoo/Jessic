@@ -50,6 +50,7 @@
                 @timeupdate="onTimeupdate"
                 @loadedmetadata="onLoadedmetadata"
                 v-show="false"
+                preload="none"
             >
                 <source v-bind:src="playingSrc" type="audio/mpeg">
             </audio>
@@ -73,7 +74,7 @@ export default {
     },
 
     watch: {
-        playingSrc: function() {
+        playingId: function() {
             this.isPlaying = false;
             this.$refs.audio.load();
             this.playSong();
@@ -187,10 +188,12 @@ export default {
         },
 
         onPlay() {
+            // console.log("onPlay");
             this.isPlaying = true;
         },
 
         onPause() {
+            // console.log("onPause");
             this.isPlaying = false;
         },
 
@@ -208,10 +211,27 @@ export default {
         },
 
         playOrPause() {
+            // if (this.isPlaying) {
+            //     this.$refs.audio.pause();
+            // } else {
+            //     this.$refs.audio.play();
+            // }
+
             if (this.isPlaying) {
+                // console.log("pause");
                 this.$refs.audio.pause();
             } else {
-                this.$refs.audio.play();
+                // console.log("play");
+                const playPromise = this.$refs.audio.play();
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            console.log("此网站可自动播放");
+                        })
+                        .catch(error => {
+                            console.log("此网站的自动播放功能被浏览器禁用");
+                        });
+                }
             }
         },
 

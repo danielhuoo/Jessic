@@ -3,7 +3,7 @@
         <div id="mask">
             <div class="loginBox">
                 <div class="appName">Jessic</div>
-                <el-input class="inputs" v-model="username" placeholder="请输入账号"></el-input>
+                <el-input class="inputs" v-model="username" placeholder="请输入网易云账号"></el-input>
                 <el-input class="inputs" placeholder="请输入密码" v-model="password" show-password></el-input>
                 <el-button class="loginBtn" type="primary" round @click="loginBtn">登录</el-button>
                 <el-link class="logasVisitor" @click="loginAsVisitors">Login as visitors</el-link>
@@ -21,8 +21,8 @@ export default {
             // username: "18002280851",
             // password: "abc12345",
 
-            username: "15602298828",
-            password: "82216118",
+            username: "",
+            password: "",
         };
     },
 
@@ -41,7 +41,7 @@ export default {
     },
 
     mounted() {
-        this.loginBtn();
+        // this.loginBtn();
     },
 
     methods: {
