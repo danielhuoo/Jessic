@@ -1,14 +1,14 @@
 export default {
     namespaced: true,
     state: {
-        playingIndex: null,// index of the list
-        playingId: null,
-        playingSrc: null,
-        playingName: null,
-        playingSinger: null,
-        playingAlbumPicUrl: null,
+        playingIndex: undefined,// index of the list
+        playingId: undefined,
+        playingSrc: undefined,
+        playingName: undefined,
+        playingSinger: undefined,
+        playingAlbumPicUrl: undefined,
 
-        isShowLivePage:false
+        isShowLivePage: false
     },
     mutations: {
         updatePlayingInfo(state, payload) {
@@ -21,8 +21,18 @@ export default {
             state.playingAlbumPicUrl = payload.al.picUrl
         },
 
-        updateShowLivePage(state, payload){
+        updateShowLivePage(state, payload) {
             state.isShowLivePage = payload
+        },
+
+        removeState(state) {
+            state.playingIndex = undefined
+            state.playingId = undefined
+            state.playingSrc = undefined
+            state.playingName = undefined
+            state.playingSinger = undefined
+            state.playingAlbumPicUrl = undefined
+            state.isShowLivePage = false
         }
     }
 }

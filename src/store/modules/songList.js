@@ -32,44 +32,41 @@ export default {
 
         getReady(state) {
             state.isReady = true
+        },
+
+        removeState(state) {
+            state.isReady = false
+            state.currentSongs = []
+            state.selectedListIndex = 0
+            state.playListInfo = []
         }
     },
     actions: {
         getPlayListInfo({ rootState, commit }) {
             console.log('getPlayListInfo')
-            axios
-                .get(rootState.api.getPlayListInfo, {
-                    params: {
-                        uid: rootState.userInfo.uid,
-                    },
-                    withCredentials: true
-                })
-                .then(response => {
-                    const res = response.data;
-                    // console.log(res)
 
-                    commit('updatePlayListInfo', {
-                        playListInfo: res.playlist
-                    })
-                });
+            rootState.api.request(rootState.api.getPlayListInfo, {
+                uid: rootState.userInfo.uid,
+            }).then(response => {
+                const res = response.data;
+                // console.log(res)
+                commit('updatePlayListInfo', {
+                    playListInfo: res.playlist
+                })
+            });
         },
 
         getPlayListDetail({ state, commit, rootState, dispatch }) {
             commit('notReady')
             console.log('getPlayListDetail')
-            const id = state.playListInfo[state.selectedListIndex].id
-            axios
-                .get(rootState.api.getPlayListDetail, {
-                    params: {
-                        id: id
-                    },
-                    withCredentials: true
-                })
-                .then(response => {
-                    const res = response.data
-                    console.log(res)
-                    dispatch('getSongsList', { res: response.data })
-                })
+
+            rootState.api.request(rootState.api.getPlayListDetail, {
+                id: state.playListInfo[state.selectedListIndex].id
+            }).then(response => {
+                const res = response.data
+                console.log(res)
+                dispatch('getSongsList', { res: response.data })
+            })
         },
 
         getSongsList({ commit, rootState, dispatch }, params) {
@@ -82,35 +79,25 @@ export default {
 
             ids = ids.sort((a, b) => a - b).toString()
 
-            axios
-                .get(rootState.api.getSongDetail, {
-                    params: {
-                        ids: ids
-                    },
-                    withCredentials: true
+            rootState.api.request(rootState.api.getSongDetail, {
+                ids: ids
+            }).then(response => {
+                const res = response.data;
+                commit('updateCurrentSongs', {
+                    currentSongs: res.songs
                 })
-                .then(response => {
-                    const res = response.data;
-                    commit('updateCurrentSongs', {
-                        currentSongs: res.songs
-                    })
 
-                    dispatch('getSongUrl', { res: ids })
-                })
+                dispatch('getSongUrl', { res: ids })
+            })
         },
 
         getSongUrl({ rootState, dispatch }, params) {
             console.log('getSongUrl')
-            axios
-                .get(rootState.api.getSongUrl, {
-                    params: {
-                        id: params.res
-                    },
-                    withCredentials: true
-                })
-                .then(response => {
-                    dispatch('handleSongUrl', response.data)
-                })
+            rootState.api.request(rootState.api.getSongUrl, {
+                id: params.res
+            }).then(response => {
+                dispatch('handleSongUrl', response.data)
+            })
         },
 
         handleSongUrl({ state, commit }, params) {

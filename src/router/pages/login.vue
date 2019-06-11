@@ -8,13 +8,12 @@
                 <el-button class="loginBtn" type="primary" round @click="loginBtn">登录</el-button>
                 <el-link class="logasVisitor" @click="loginAsVisitors">Login as visitors</el-link>
             </div>
-        
         </div>
     </div>
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
     data() {
         return {
@@ -22,7 +21,7 @@ export default {
             // password: "abc12345",
 
             username: "",
-            password: "",
+            password: ""
         };
     },
 
@@ -48,6 +47,15 @@ export default {
         ...mapActions("userInfo", ["login"]),
         loginBtn() {
             // console.log('loginBtn')
+
+            if (!this.username || !this.password) {
+                this.$message({
+                    message: "用户名或密码输入有误，请重新输入",
+                    type: "warning"
+                });
+                return false;
+            }
+
             this.login({
                 username: this.username,
                 password: this.password
@@ -56,11 +64,11 @@ export default {
             this.password = "";
         },
 
-        loginAsVisitors(){
-            this.username = '18002280851'
-            this.password = 'abc12345'
+        loginAsVisitors() {
+            this.username = "18002280851";
+            this.password = "abc12345";
 
-            this.loginBtn()
+            this.loginBtn();
         }
     }
 };
@@ -106,7 +114,7 @@ export default {
     margin-bottom: 10px;
 }
 
-.logasVisitor{
+.logasVisitor {
     width: 100%;
     color: white;
     margin-top: 5px;

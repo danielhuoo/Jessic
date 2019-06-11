@@ -66,7 +66,7 @@ export default {
 
     methods: {
         ...mapActions("songList", ["getPlayListDetail"]),
-        ...mapMutations("userInfo", ["removeLoginInfo"]),
+        ...mapActions(["removeAllStates"]),
         ...mapMutations("songList", ["updateSelectedListIndex"]),
 
         handleSelect(index) {
@@ -87,10 +87,9 @@ export default {
                 type: "warning"
             })
                 .then(() => {
-                    this.removeLoginInfo();
+                    this.removeAllStates()
                     this.$router.push("/login");
                 })
-                .catch();
         }
     },
     mounted() {

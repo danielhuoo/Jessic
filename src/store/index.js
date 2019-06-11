@@ -19,5 +19,12 @@ export default new Vuex.Store({
 	},
 	state: {
 		api: api
+	},
+	actions:{
+		removeAllStates({commit}){
+			commit('userInfo/removeState')
+			commit('songList/removeState')
+			commit('player/removeState')
+		}
 	}
 })

@@ -3,10 +3,10 @@ export default {
     state: {
         isSucceed: false,
 
-        uid: 0,
-        username: '',
-        nickname: '',
-        avatarUrl: '',
+        uid: 0,//user id
+        username: undefined,
+        nickname: undefined,
+        avatarUrl: undefined,
 
         loading: null
     },
@@ -21,11 +21,11 @@ export default {
             state.isSucceed = payload.isSucceed
         },
 
-        removeLoginInfo(state) {
+        removeState(state) {
             state.uid = 0
-            state.username = ''
-            state.nickname = ''
-            state.avatarUrl = ''
+            state.username = undefined
+            state.nickname = undefined
+            state.avatarUrl = undefined
             state.isSucceed = false
         },
 
@@ -36,39 +36,30 @@ export default {
     actions: {
 
         login({ rootState, dispatch }, params) {
-            axios
-                .get(rootState.api.login, {
-                    params: {
-                        phone: params.username,
-                        password: params.password
-                    },
-                    withCredentials: true
-                })
-                .then(response => {
-                    const res = response.data;
-                    // console.log(res)
-                    if (res.code === 200) {
-                        dispatch('getUserDetail', { uid: res.account.id })
-                    }
-
-                });
+            rootState.api.request(rootState.api.login,
+                {
+                    phone: params.username,
+                    password: params.password
+                },
+            ).then(response => {
+                const res = response.data;
+                // console.log(res)
+                if (res.code === 200) {
+                    dispatch('getUserDetail', { uid: res.account.id })
+                }
+            });
         },
 
         getUserDetail({ commit, rootState }, params) {
-            axios
-                .get(rootState.api.getUserDetail, {
-                    params: {
-                        uid: params.uid
-                    },
-                    withCredentials: true
-                })
-                .then(response => {
-                    const res = response.data;
-                    // console.log(res)
-                    res.uid = params.uid
-                    commit('updateUserInfo', { userInfo: res });
-                    commit('updateLoginStatus', { isSucceed: true })
-                });
+            rootState.api.request(rootState.api.getUserDetail, {
+                uid: params.uid
+            }).then(response => {
+                const res = response.data;
+                // console.log(res)
+                res.uid = params.uid
+                commit('updateUserInfo', { userInfo: res });
+                commit('updateLoginStatus', { isSucceed: true })
+            });
         },
         // refreshLoginState() {
         //     let that = this;
