@@ -4,15 +4,16 @@
         <!-- <el-row v-show="isReady">
             <el-button type="primary" plain :click="playSelectedList">播放此歌单</el-button>
         </el-row>-->
+
         <el-table
+            :data="currentSongs"
             v-loading="isLoading"
+            :row-class-name="tableRowClassName"
             element-loading-text="正在加载歌单信息"
             element-loading-background="#ffffff"
-            :data="currentSongs"
             v-bind:class="bgc"
             :height="tableHeight"
             :row-key="currentSongs.id"
-            :row-class-name="tableRowClassName"
             header-row-class-name="tableHeaderBgc"
             @row-dblclick="playThisSong"
             empty-text="暂无歌曲"
@@ -25,7 +26,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
     name: "songList",
     data() {
@@ -38,20 +39,17 @@ export default {
         ...mapState("songList", {
             currentSongs: state => state.currentSongs,
             playListInfo: state => state.playListInfo,
-            isReady: state => state.isReady,
+            isLoading: state => state.isLoading,
             selectedListIndex: state => state.selectedListIndex
         }),
         ...mapState("player", {
-            playingIndex: state => state.playingIndex
+            playingIndex: state => state.playingIndex,
+            playingId: state => state.playingId
         }),
 
         ...mapState("color", {
             bgc: state => state.bgc
         }),
-
-        isLoading: function() {
-            return !this.isReady;
-        },
 
         songListName: function() {
             return this.playListInfo[this.selectedListIndex].name;
@@ -63,43 +61,28 @@ export default {
     },
     methods: {
         ...mapMutations("player", ["updatePlayingInfo"]),
-        ...mapActions("songList", ["getLikeList", "getPlayListInfo"]),
-        playThisSong(row, column, event) {
+        playThisSong(row) {
             this.updatePlayingInfo(row);
         },
 
         tableRowClassName({ row, rowIndex }) {
-            if (rowIndex === this.playingIndex) {
+            if (rowIndex === this.playingIndex && row.id === this.playingId) {
                 return "playingSong";
-            } else if (!row.songUrl) {
-                return "songUnavailable";
             }
         }
 
         // push all the songs from this list to the playlist
         // playSelectedList() {}
-    },
-    mounted() {
-        this.getPlayListInfo();
     }
 };
 </script>
 
 <style lang="scss">
 #songList {
-    // border: 1px solid red
 }
 .el-table {
     .playingSong {
         color: #409eff;
     }
-
-    .songUnavailable {
-        color: #c0c4cc;
-    }
 }
-// .el-table th,
-// .el-table tr {
-//     background-color: #282828 !important;
-// }
 </style>

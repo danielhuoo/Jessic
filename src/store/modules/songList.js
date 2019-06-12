@@ -1,7 +1,7 @@
 export default {
     namespaced: true,
     state: {
-        isReady: false,
+        isLoading: false,
         currentSongs: [],
 
         selectedListIndex: 0, // not the unique id
@@ -22,54 +22,51 @@ export default {
                 list[i].index4El = i.toString()
             }
 
-            // console.log(list)
             state.playListInfo = list
         },
 
-        notReady(state) {
-            state.isReady = false
-        },
-
-        getReady(state) {
-            state.isReady = true
+        updateLoadingStatus(state, payload) {
+            state.isLoading = payload.status
         },
 
         removeState(state) {
-            state.isReady = false
+            state.isLoading = false
             state.currentSongs = []
             state.selectedListIndex = 0
             state.playListInfo = []
         }
     },
     actions: {
-        getPlayListInfo({ rootState, commit }) {
+        // Favourite, Rihhana and so on...
+        getPlayListInfo({ rootState, commit, dispatch }) {
             console.log('getPlayListInfo')
-
             rootState.api.request(rootState.api.getPlayListInfo, {
                 uid: rootState.userInfo.uid,
             }).then(response => {
                 const res = response.data;
-                // console.log(res)
                 commit('updatePlayListInfo', {
                     playListInfo: res.playlist
                 })
+
+                dispatch('getPlayListDetail')
             });
         },
 
-        getPlayListDetail({ state, commit, rootState, dispatch }) {
-            commit('notReady')
+        // details of a specific list, containing id of songs
+        getPlayListDetail({ state, rootState, dispatch, commit }) {
             console.log('getPlayListDetail')
-
+            commit('updateLoadingStatus', {
+                status: true
+            })
             rootState.api.request(rootState.api.getPlayListDetail, {
                 id: state.playListInfo[state.selectedListIndex].id
             }).then(response => {
-                const res = response.data
-                console.log(res)
+                console.log(response.data)
                 dispatch('getSongsList', { res: response.data })
             })
         },
 
-        getSongsList({ commit, rootState, dispatch }, params) {
+        getSongsList({ commit, rootState }, params) {
             console.log('getSongsList')
             const items = params.res.privileges
             let ids = []
@@ -77,49 +74,23 @@ export default {
                 ids.push(items[i].id)
             }
 
-            ids = ids.sort((a, b) => a - b).toString()
-
             rootState.api.request(rootState.api.getSongDetail, {
-                ids: ids
+                ids: ids.toString()
             }).then(response => {
                 const res = response.data;
+
+                for (let i = 0, len = res.songs.length; i < len; i++) {
+                    res.songs[i].index = i
+                }
+
                 commit('updateCurrentSongs', {
                     currentSongs: res.songs
                 })
 
-                dispatch('getSongUrl', { res: ids })
+                commit('updateLoadingStatus', {
+                    status: false
+                })
             })
-        },
-
-        getSongUrl({ rootState, dispatch }, params) {
-            console.log('getSongUrl')
-            rootState.api.request(rootState.api.getSongUrl, {
-                id: params.res
-            }).then(response => {
-                dispatch('handleSongUrl', response.data)
-            })
-        },
-
-        handleSongUrl({ state, commit }, params) {
-            console.log('handleSongUrl')
-
-            let currentSongs = state.currentSongs
-            let data = params.data.sort((a, b) => a.id - b.id)
-            // console.log(data)
-
-            for (let i = 0, len = data.length; i < len; i++) {
-                if (data[i].url) {
-                    currentSongs[i].songUrl = "http://m10c" + data[i].url.substring(10)
-                } else {
-                    currentSongs[i].songUrl = ''
-                }
-                currentSongs[i].index = i
-            }
-
-            commit('updateCurrentSongs', {
-                currentSongs: currentSongs
-            })
-            commit('getReady')
         }
     }
 }

@@ -6,7 +6,7 @@ A NetEase music player based on Vue
 
 This is an online music player of Desktop, whose data is fetched from NetEase Music. The Api interfaces are provided by [API](https://github.com/Binaryify/NeteaseCloudMusicApi).
 
-You can have a look at [Demo](http://35.242.163.122/).
+You can have a look at [Demo](http://music.jessic.xyz).
 
 ## Interface
 
@@ -23,7 +23,7 @@ It is worth mentioning that this is the first time that I introduced Vuex in the
 The currently known bugs are:
 
 1. ~~Playing a song will throw a DOM exception, but it will not affect the playback effect.~~(I will then write details about it.)
-2. After switching the song list, the song list is not well rendered, but does not affect playback.
+2. ~~After switching the song list, the song list is not well rendered, but does not affect playback.~~
 3. After logging in for a certain period of time, the song will not be played. I think it is related to the login status expiration time. Need to refresh the page or log in again.
 4. Lack of test samples, resulting in most abnormal conditions not being processed
 5. ~~Songs cannot be played on Safari.~~
@@ -44,15 +44,15 @@ Directly clone the [repository](https://github.com/danielhuoo/NeteaseCloudMusicA
 
 ## setup
 ```
-npm install
+yarn
 ```
 
 ### run
 ```
-npm run serve
+yarn run serve
 ```
 
 ### build
 ```
-npm run build
+yarn run build
 ```

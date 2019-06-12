@@ -55,17 +55,8 @@ export default {
         })
     },
 
-    watch: {
-        // only when the playlistinfo is loaded could start the song
-        playListInfo: function() {
-            if (this.playListInfo.length) {
-                this.getPlayListDetail();
-            }
-        }
-    },
-
     methods: {
-        ...mapActions("songList", ["getPlayListDetail"]),
+        ...mapActions("songList", ["getPlayListInfo", "getPlayListDetail"]),
         ...mapActions(["removeAllStates"]),
         ...mapMutations("songList", ["updateSelectedListIndex"]),
 
@@ -78,23 +69,20 @@ export default {
         },
         logout() {
             console.log("logout");
-
             this.$confirm("是否退出账号?", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 showClose: false,
                 center: true,
                 type: "warning"
-            })
-                .then(() => {
-                    this.removeAllStates()
-                    this.$router.push("/login");
-                })
+            }).then(() => {
+                this.removeAllStates();
+                this.$router.push("/login");
+            });
         }
     },
     mounted() {
-        // this.getPlayListDetail()
-        // console.log(this.playListInfo);
+        this.getPlayListInfo()
     }
 };
 </script>

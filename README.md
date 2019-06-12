@@ -6,7 +6,7 @@ Languages：中文 | [English](README_en.md)
 
 这是一个PC端的在线音乐播放器，后端数据取自网易云音乐。API接口来自：[网易云音乐 API](https://github.com/Binaryify/NeteaseCloudMusicApi).
 
-你可以看看[Demo](http://35.242.163.122/)。
+你可以看看[Demo](http://music.jessic.xyz)。
 
 ## 界面
 
@@ -22,8 +22,8 @@ Languages：中文 | [English](README_en.md)
 目前已知的bug有：
 
 1. ~~播放歌曲会抛出DOM异常，但不影响播放效果~~(后期会补上教程，先占坑)
-2. 切换歌单后，歌单渲染不好，但不影响播放
-3. 登录一定时候后会无法播放歌曲，我认为跟登录状态过期时间有关。需要刷新网页或者重新登录。
+2. ~~切换歌单后，歌单渲染不好，但不影响播放~~
+3. 登录一定时间后会无法播放歌曲，我认为跟登录状态过期时间有关。需要刷新网页或者重新登录。
 4. 缺乏测试样本，导致大部分异常状况没有被处理
 5. ~~在Safari上无法播放歌曲。~~
 
@@ -43,15 +43,15 @@ Anyway， 这个项目是以练习为目的的，所以不可能做到十全十�
 
 ## 安装 setup
 ```
-npm install
+yarn
 ```
 
 ### 运行
 ```
-npm run serve
+yarn run serve
 ```
 
 ### 编译
 ```
-npm run build
+yarn run build
 ```

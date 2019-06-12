@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 export default {
     data() {
         return {
@@ -25,21 +25,8 @@ export default {
         };
     },
 
-    computed: {
-        ...mapState("userInfo", {
-            isSucceed: state => state.isSucceed
-        })
-    },
-
-    watch: {
-        isSucceed: function() {
-            if (this.isSucceed) {
-                this.$router.push("/");
-            }
-        }
-    },
-
     mounted() {
+        // for test
         // this.loginBtn();
     },
 
@@ -56,18 +43,29 @@ export default {
                 return false;
             }
 
+            const loadingInstance = this.$loading({
+                fullscreen: true,
+                text: "正在拼命登录...",
+                customClass: "loadingBg"
+            });
+
             this.login({
                 username: this.username,
                 password: this.password
+            }).then(() => {
+                this.$nextTick(() => {
+                    // 以服务的方式调用的 Loading 需要异步关闭
+                    loadingInstance.close();
+                });
+                this.$router.push("/");
+                this.username = "";
+                this.password = "";
             });
-            this.username = "";
-            this.password = "";
         },
 
         loginAsVisitors() {
             this.username = "18002280851";
             this.password = "abc12345";
-
             this.loginBtn();
         }
     }

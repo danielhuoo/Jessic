@@ -28,4 +28,8 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.loadingBg {
+    background-color: rgba(0, 0, 0, 0.8);
+}
 </style>

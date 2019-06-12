@@ -2,10 +2,10 @@
     <div id="player">
         <el-container>
             <el-aside width="250px">
-                <el-button icon="el-icon-arrow-left" circle @click="prevSong" size="small"></el-button>
+                <el-button icon="el-icon-arrow-left" circle @click="prevSong" size="small" :disabled="isGettingUrl"></el-button>
                 <el-button icon="el-icon-video-pause" circle @click="playSong" v-if="isPlaying"></el-button>
                 <el-button icon="el-icon-caret-right" circle @click="playSong" v-else></el-button>
-                <el-button icon="el-icon-arrow-right" circle @click="nextSong" size="small"></el-button>
+                <el-button icon="el-icon-arrow-right" circle @click="nextSong" size="small" :disabled="isGettingUrl"></el-button>
             </el-aside>
             <el-main v-bind:class="bgc">
                 <el-row>
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import moment from "moment";
 export default {
     name: "player",
@@ -68,43 +68,22 @@ export default {
             isPlaying: false,
             playing_currentTime: null,
             playing_duration: null,
-
             timer: null
         };
     },
 
     watch: {
         playingId: function() {
-            this.isPlaying = false;
-            this.$refs.audio.load();
-            this.playSong();
-        },
-
-        listIsReady: function() {
-            if (this.listIsReady) {
-                this.initPlayer();
-            }
+            this.getUrlNPlay()
         }
     },
 
     computed: {
-        playingProgress: function() {
-            if (!this.playing_duration) {
-                return;
-            }
-
-            let percentage = parseInt(
-                (this.playing_currentTime / this.playing_duration) * 100
-            );
-            return percentage;
-        },
-
         ...mapState("color", {
             bgc: state => state.bgc
         }),
 
         ...mapState("songList", {
-            listIsReady: state => state.isReady,
             currentSongs: state => state.currentSongs
         }),
 
@@ -115,9 +94,20 @@ export default {
             playingName: state => state.playingName,
             playingSinger: state => state.playingSinger,
             playingAlbumPicUrl: state => state.playingAlbumPicUrl,
-
+            isGettingUrl: state => state.isGettingUrl,
             isShowLivePage: state => state.isShowLivePage
         }),
+
+        playingProgress: function() {
+            if (!this.playing_duration) {
+                return;
+            }
+
+            let percentage = parseInt(
+                (this.playing_currentTime / this.playing_duration) * 100
+            );
+            return percentage;
+        },
 
         displayCurrentTime: function() {
             const handleFormat = val => {
@@ -151,22 +141,32 @@ export default {
     },
 
     methods: {
+        ...mapActions("player", ["getSongUrl"]),
         ...mapMutations("player", ["updatePlayingInfo", "updateShowLivePage"]),
-        initPlayer() {
-            // play the first song of the list
-            this.updatePlayingInfo(this.currentSongs[0]);
-            this.playSong();
+
+        getUrlNPlay() {
+            this.isPlaying = false;
+
+            this.getSongUrl({
+                id: this.playingId
+            }).then(() => {
+                this.$refs.audio.load();
+                this.playSong();
+            });
         },
 
         // It is the main method
         playSong() {
+            if(this.playingIndex === undefined){
+                this.updatePlayingInfo(this.currentSongs[0]);
+            }
+
             clearInterval(this.timer);
             if (!this.playingSrc) {
                 this.$notify({
                     title: this.playingName,
                     message: "暂时听不了了,只能试试其他歌曲了"
                 });
-
                 this.timer = setTimeout(() => {
                     this.nextSong();
                 }, 1000);
@@ -176,24 +176,20 @@ export default {
         },
 
         nextSong() {
-            const nextId = this.playingIndex + 1;
-            this.updatePlayingInfo(this.currentSongs[nextId]);
-            this.playSong();
+            // console.log('nextSong')
+            this.updatePlayingInfo(this.currentSongs[this.playingIndex + 1]);
         },
 
         prevSong() {
-            const prevId = this.playingIndex - 1;
-            this.updatePlayingInfo(this.currentSongs[prevId]);
-            this.playSong();
+            // console.log('prevSong')
+            this.updatePlayingInfo(this.currentSongs[this.playingIndex - 1]);
         },
 
         onPlay() {
-            // console.log("onPlay");
             this.isPlaying = true;
         },
 
         onPause() {
-            // console.log("onPause");
             this.isPlaying = false;
         },
 
@@ -211,12 +207,6 @@ export default {
         },
 
         playOrPause() {
-            // if (this.isPlaying) {
-            //     this.$refs.audio.pause();
-            // } else {
-            //     this.$refs.audio.play();
-            // }
-
             if (this.isPlaying) {
                 // console.log("pause");
                 this.$refs.audio.pause();
@@ -226,10 +216,10 @@ export default {
                 if (playPromise !== undefined) {
                     playPromise
                         .then(() => {
-                            console.log("此网站可自动播放");
+                            // console.log("此网站可自动播放");
                         })
                         .catch(error => {
-                            console.log("此网站的自动播放功能被浏览器禁用");
+                            // console.log("此网站的自动播放功能被浏览器禁用");
                         });
                 }
             }
