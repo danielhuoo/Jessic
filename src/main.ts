@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import './plugins/element.js'
-import './plugins/axios'
+import './plugins/axios.js'
 import store from './store/'
-import router from './router/'
+import router from './router'
 import App from './App.vue'
 // import log4Test from './tools/'
 Vue.config.productionTip = false

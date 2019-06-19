@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import main from './pages/main'
-import login from './pages/login'
+import main from './pages/main.vue'
+import login from './pages/login.vue'
 Vue.use(VueRouter)
 const routes = [
     { path: '/', component: main },

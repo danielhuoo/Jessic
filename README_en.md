@@ -33,7 +33,7 @@ Late outlook:
 2. It may be rewritten as the SSR architecture
 3. It is highly possible to use Electron to package it into an App to run on a Mac or Linux
 4. I will add search, lyrics, songs, additions and deletions, MV and other functions.
-5. May use Typescript for refactoring
+5. ~~May use Typescript for refactoring~~(2019.06.19-Already refactored the project with Typescript)
 
 This project is my personal project. I will continually update and add new features and optimizations.
 Anyway, this project is for practice purposes, so it is impossible to be perfect. 

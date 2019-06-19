@@ -7,7 +7,7 @@ export default {
     getPlayListInfo: '/user/playlist',
     getPlayListDetail: '/playlist/detail',
 
-    request(url, params) {
+    request(url: string, params: any) {
         return Vue.axios.get(url, {
             params: params,
             withCredentials: true,

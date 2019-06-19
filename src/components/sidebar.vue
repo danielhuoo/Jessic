@@ -33,58 +33,63 @@
     </div>
 </template>
 
-<script>
-import { mapMutations, mapState, mapActions } from "vuex";
+<script lang="ts">
+import { Vue, Component, Watch } from "vue-property-decorator";
+import { State, Action, Mutation, namespace } from "vuex-class";
+import { LoginInfoState, SongListState } from "../store/modules/module-types";
+@Component
+export default class sidebarComp extends Vue {
+    @State("loginInfo") loginInfo!: LoginInfoState; //為什麼不用指定namespace 呢？
+    @State("songList") songList!: SongListState;
+    @Action("removeAllStates")
+    removeAllStates: any;
+    @Action("getPlayListInfo", { namespace: "songList" })
+    getPlayListInfo: any;
+    @Action("getPlayListDetail", { namespace: "songList" })
+    getPlayListDetail: any;
+    @Mutation("updateSelectedListIndex", { namespace: "songList" })
+    updateSelectedListIndex: any;
 
-export default {
-    name: "sidebar",
-    data() {
-        return {};
-    },
-    computed: {
-        // To display the avatar and nickname on the sidebar
-        ...mapState("userInfo", {
-            uid: state => state.uid,
-            avatarUrl: state => state.avatarUrl,
-            nickname: state => state.nickname
-        }),
-
-        // To display the playlists on the sidebar
-        ...mapState("songList", {
-            playListInfo: state => state.playListInfo
-        })
-    },
-
-    methods: {
-        ...mapActions("songList", ["getPlayListInfo", "getPlayListDetail"]),
-        ...mapActions(["removeAllStates"]),
-        ...mapMutations("songList", ["updateSelectedListIndex"]),
-
-        handleSelect(index) {
-            this.updateSelectedListIndex({
-                selectedListIndex: index
-            });
-
-            this.getPlayListDetail();
-        },
-        logout() {
-            console.log("logout");
-            this.$confirm("是否退出账号?", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                showClose: false,
-                center: true,
-                type: "warning"
-            }).then(() => {
-                this.removeAllStates();
-                this.$router.push("/login");
-            });
-        }
-    },
-    mounted() {
-        this.getPlayListInfo()
+    // To display the avatar and nickname on the sidebar
+    get avatarUrl(): string {
+        return this.loginInfo.avatarUrl;
     }
-};
+
+    get nickname(): string {
+        return this.loginInfo.nickname;
+    }
+
+    // To display the playlists on the sidebar
+    get playListInfo(): Array<any> {
+        return this.songList.playListInfo;
+    }
+
+    handleSelect(index: number) {
+        this.updateSelectedListIndex({
+            selectedListIndex: index
+        });
+
+        this.getPlayListDetail();
+    }
+
+    logout() {
+        console.log("logout");
+        this.$confirm("是否退出账号?", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            showClose: false,
+            center: true,
+            type: "warning"
+        }).then(() => {
+            this.removeAllStates();
+            this.$router.push("/login");
+        });
+    }
+
+    mounted() {
+        this.getPlayListInfo();
+    }
+}
 </script>
 <style scoped lang="scss">
 #sidebar {

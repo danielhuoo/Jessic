@@ -11,7 +11,6 @@ export default {
     data() {
         return {};
     },
-
     mounted() {
         this.$router.push("/login");
     }
@@ -28,7 +27,6 @@ body {
     margin: 0;
     padding: 0;
 }
-
 .loadingBg {
     background-color: rgba(0, 0, 0, 0.8);
 }

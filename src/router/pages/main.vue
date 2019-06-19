@@ -17,7 +17,7 @@
                             v-bind:style="{width:'250px',height: containerHeight}"
                             v-bind:class="bgc"
                         >
-                            <sidebar></sidebar>
+                            <sidebarComp></sidebarComp>
                         </el-aside>
 
                         <el-main v-bind:class="bgc">
@@ -29,79 +29,88 @@
                 </el-container>
             </el-carousel-item>
             <el-carousel-item name="livePage">
-                <live></live>
+                <!-- <live></live> -->
             </el-carousel-item>
         </el-carousel>
 
-        <player v-bind:class="bgc"></player>
+        <playerComp v-bind:class="bgc"></playerComp>
     </div>
 </template>
-<script>
-import sidebar from "../../components/sidebar";
-import player from "../../components/player";
-import songList from "../../components/songList";
-import live from "../../components/live";
-import headbar from "../../components/headbar";
-import { mapActions, mapState, mapMutations } from "vuex";
-export default {
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import sidebarComp from "../../components/sidebar.vue";
+import playerComp from "../../components/player.vue";
+import songListComp from "../../components/songList.vue";
+// import live from "../../components/live";
+// import headbar from "../../components/headbar";
+// import { mapActions, mapState, mapMutations } from "vuex";
+@Component({
     components: {
-        songList,
-        sidebar,
-        player,
-        live,
-        headbar
-    },
-    data() {
-        return {
-            timer: false,
-            playerHeight: 80,
-            windowHeight: document.documentElement.clientHeight,
-            windowWidth: document.documentElement.clientWidth,
-            currentPage: "songList"
+        songListComp,
+        sidebarComp,
+        playerComp
+        // live,
+        // headbar
+    }
+})
+export default class mainPage extends Vue {
+    timer: boolean = false;
+    playerHeight: number = 80;
+    windowHeight: number = document.documentElement.clientHeight;
+    windowWidth: number = document.documentElement.clientWidth;
+    currentPage: string = "songListComp";
+
+    get bgc(): string {
+        return "bgc-day";
+    }
+
+    get containerHeight(): string {
+        return this.windowHeight - this.playerHeight + "px";
+    }
+
+    // computed: {
+    //     // ...mapState("sidebar", {
+    //     //     selectedSideBar: state => state.selectedSideBar
+    //     // }),
+
+    //     // ...mapState("player", {
+    //     //     isShowLivePage: state => state.isShowLivePage
+    //     // }),
+
+    //     // ...mapState("color", {
+    //     //     bgc: state => state.bgc
+    //     // })
+    // },
+
+    // watch: {
+    //     isShowLivePage: function() {
+    //         if (this.isShowLivePage) {
+    //             this.$refs.carousel.setActiveItem("livePage");
+    //         } else {
+    //             this.$refs.carousel.setActiveItem("normalPage");
+    //         }
+    //     }
+    // },
+
+    initWindowResizeEvt() {
+        console.log("initWindowResizeEvt");
+        window.onresize = () => {
+            setTimeout(() => {
+                this.windowHeight = document.documentElement.clientHeight;
+            }, 400);
         };
-    },
-    computed: {
-        containerHeight: function() {
-            return this.windowHeight - this.playerHeight + "px";
-        },
-        ...mapState("sidebar", {
-            selectedSideBar: state => state.selectedSideBar
-        }),
+    }
 
-        ...mapState("player", {
-            isShowLivePage: state => state.isShowLivePage
-        }),
+    // methods: {
+    //     // ...mapMutations("sidebar", ["updateSelectedSideBar"]),
 
-        ...mapState("color", {
-            bgc: state => state.bgc
-        })
-    },
-
-    watch: {
-        isShowLivePage: function() {
-            if (this.isShowLivePage) {
-                this.$refs.carousel.setActiveItem("livePage");
-            } else {
-                this.$refs.carousel.setActiveItem("normalPage");
-            }
-        }
-    },
-
-    methods: {
-        ...mapMutations("sidebar", ["updateSelectedSideBar"]),
-        initWindowResizeEvt() {
-            window.onresize = () => {
-                setTimeout(() => {
-                    this.windowHeight = document.documentElement.clientHeight;
-                }, 400);
-            };
-        }
-    },
+    // },
 
     mounted() {
         this.initWindowResizeEvt();
     }
-};
+}
 </script>
 
 <style lang="scss">

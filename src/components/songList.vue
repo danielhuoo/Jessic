@@ -25,56 +25,67 @@
     </div>
 </template>
 
-<script>
-import { mapState, mapMutations } from "vuex";
-export default {
-    name: "songList",
-    data() {
-        return {
-            playerHeight: 80,
-            windowHeight: document.documentElement.clientHeight
-        };
-    },
-    computed: {
-        ...mapState("songList", {
-            currentSongs: state => state.currentSongs,
-            playListInfo: state => state.playListInfo,
-            isLoading: state => state.isLoading,
-            selectedListIndex: state => state.selectedListIndex
-        }),
-        ...mapState("player", {
-            playingIndex: state => state.playingIndex,
-            playingId: state => state.playingId
-        }),
+<script lang="ts">
+import { Vue, Component, Watch } from "vue-property-decorator";
+import { State, Action, Mutation } from "vuex-class";
+import { SongListState, PlayerState } from "../store/modules/module-types";
+@Component
+export default class songListComp extends Vue {
+    // get songListName() {
+    //     return this.playListInfo[this.selectedListIndex].name;
+    // }
 
-        ...mapState("color", {
-            bgc: state => state.bgc
-        }),
+    @State("songList") songList!: SongListState;
+    @State("player") playerStore!: PlayerState;
 
-        songListName: function() {
-            return this.playListInfo[this.selectedListIndex].name;
-        },
+    @Mutation("updatePlayingInfo", { namespace: "player" })
+    updatePlayingInfo: any;
 
-        tableHeight: function() {
-            return this.windowHeight - this.playerHeight + "px";
-        }
-    },
-    methods: {
-        ...mapMutations("player", ["updatePlayingInfo"]),
-        playThisSong(row) {
-            this.updatePlayingInfo(row);
-        },
+    playerHeight: number = 80;
+    windowHeight: number = document.documentElement.clientHeight;
 
-        tableRowClassName({ row, rowIndex }) {
-            if (rowIndex === this.playingIndex && row.id === this.playingId) {
-                return "playingSong";
-            }
-        }
-
-        // push all the songs from this list to the playlist
-        // playSelectedList() {}
+    get tableHeight() {
+        return this.windowHeight - this.playerHeight + "px";
     }
-};
+
+    get currentSongs() {
+        return this.songList.currentSongs;
+    }
+
+    get isLoading() {
+        return this.songList.isLoading;
+    }
+
+    get playListInfo() {
+        return this.songList.playListInfo;
+    }
+
+    get selectedListIndex() {
+        return this.songList.selectedListIndex;
+    }
+
+    get playingIndex() {
+        return this.playerStore.playingIndex;
+    }
+
+    get playingId() {
+        return this.playerStore.playingId;
+    }
+
+    get bgc() {
+        return "bgc-day";
+    }
+
+    playThisSong(row: any) {
+        this.updatePlayingInfo(row);
+    }
+
+    tableRowClassName({ row, rowIndex }: any) {
+        if (rowIndex === this.playingIndex && row.id === this.playingId) {
+            return "playingSong";
+        }
+    }
+}
 </script>
 
 <style lang="scss">

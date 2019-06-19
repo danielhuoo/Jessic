@@ -32,7 +32,7 @@ Languages：中文 | [English](README_en.md)
 2. 可能会改写成SSR的架构
 3. 极有可能使用 Electron 包装成 App，从而在 Mac 或 Linux 上运行
 4. 后续会加入 搜索、歌词、歌曲的增删查改、MV等功能
-5. 可能会使用 Typescript 进行重构
+5. ~~可能会使用 Typescript 进行重构~~(2019.06.19-已经Typescript重写项目)
 
 这个项目是我的个人项目。我会不断地更新，加入新的功能和优化。
 Anyway， 这个项目是以练习为目的的，所以不可能做到十全十美。有兴趣的同学可以多交流交流。

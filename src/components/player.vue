@@ -2,10 +2,22 @@
     <div id="player">
         <el-container>
             <el-aside width="250px">
-                <el-button icon="el-icon-arrow-left" circle @click="prevSong" size="small" :disabled="isGettingUrl"></el-button>
+                <el-button
+                    icon="el-icon-arrow-left"
+                    circle
+                    @click="prevSong"
+                    size="small"
+                    :disabled="isGettingUrl"
+                ></el-button>
                 <el-button icon="el-icon-video-pause" circle @click="playSong" v-if="isPlaying"></el-button>
                 <el-button icon="el-icon-caret-right" circle @click="playSong" v-else></el-button>
-                <el-button icon="el-icon-arrow-right" circle @click="nextSong" size="small" :disabled="isGettingUrl"></el-button>
+                <el-button
+                    icon="el-icon-arrow-right"
+                    circle
+                    @click="nextSong"
+                    size="small"
+                    :disabled="isGettingUrl"
+                ></el-button>
             </el-aside>
             <el-main v-bind:class="bgc">
                 <el-row>
@@ -58,184 +70,195 @@
     </div>
 </template>
 
-<script>
-import { mapState, mapMutations, mapActions } from "vuex";
+<script lang="ts">
 import moment from "moment";
-export default {
-    name: "player",
-    data() {
-        return {
-            isPlaying: false,
-            playing_currentTime: null,
-            playing_duration: null,
-            timer: null
-        };
-    },
+import { Vue, Component, Watch } from "vue-property-decorator";
+import { State, Action, Mutation } from "vuex-class";
+import { SongListState, PlayerState } from "../store/modules/module-types";
+@Component
+export default class playerComp extends Vue {
+    @State("songList") songListStore!: SongListState;
+    @State("player") playerStore!: PlayerState;
 
-    watch: {
-        playingId: function() {
-            this.getUrlNPlay()
+    @Action("getSongUrl", { namespace: "player" })
+    getSongUrl: any;
+    @Mutation("updatePlayingInfo", { namespace: "player" })
+    updatePlayingInfo: any;
+    @Mutation("updateShowLivePage", { namespace: "player" })
+    updateShowLivePage: any;
+
+    @Watch("playingId")
+    onPlayingIdChanged() {
+        this.getUrlNPlay();
+    }
+
+    isPlaying: boolean = false;
+    playing_currentTime: number = 0;
+    playing_duration: number = 0;
+    timer: any = null;
+
+    get currentSongs() {
+        return this.songListStore.currentSongs;
+    }
+
+    get playingId() {
+        return this.playerStore.playingId;
+    }
+
+    get playingIndex() {
+        return this.playerStore.playingIndex;
+    }
+
+    get playingSrc() {
+        return this.playerStore.playingSrc;
+    }
+    get playingName() {
+        return this.playerStore.playingName;
+    }
+    get playingSinger() {
+        return this.playerStore.playingSinger;
+    }
+    get playingAlbumPicUrl() {
+        return this.playerStore.playingAlbumPicUrl;
+    }
+    get isGettingUrl() {
+        return this.playerStore.isGettingUrl;
+    }
+    get isShowLivePage() {
+        return this.playerStore.isShowLivePage;
+    }
+
+    get playingProgress() {
+        if (!this.playing_duration) {
+            return;
         }
-    },
 
-    computed: {
-        ...mapState("color", {
-            bgc: state => state.bgc
-        }),
+        let percentage = Math.floor(
+            (this.playing_currentTime / this.playing_duration) * 100
+        );
+        return percentage;
+    }
 
-        ...mapState("songList", {
-            currentSongs: state => state.currentSongs
-        }),
+    get displayCurrentTime() {
+        let d = moment.duration(this.playing_currentTime, "seconds");
+        let minute = this.handleFormat(d.minutes());
+        let second = this.handleFormat(d.seconds());
+        return minute + ":" + second;
+    }
 
-        ...mapState("player", {
-            playingId: state => state.playingId,
-            playingIndex: state => state.playingIndex,
-            playingSrc: state => state.playingSrc,
-            playingName: state => state.playingName,
-            playingSinger: state => state.playingSinger,
-            playingAlbumPicUrl: state => state.playingAlbumPicUrl,
-            isGettingUrl: state => state.isGettingUrl,
-            isShowLivePage: state => state.isShowLivePage
-        }),
+    get displayDuration() {
+        let d = moment.duration(this.playing_duration, "seconds");
+        let minute = this.handleFormat(d.minutes());
+        let second = this.handleFormat(d.seconds());
+        return minute + ":" + second;
+    }
 
-        playingProgress: function() {
-            if (!this.playing_duration) {
-                return;
-            }
+    get bgc() {
+        return "bgc-day";
+    }
 
-            let percentage = parseInt(
-                (this.playing_currentTime / this.playing_duration) * 100
-            );
-            return percentage;
-        },
-
-        displayCurrentTime: function() {
-            const handleFormat = val => {
-                if (val < 10) {
-                    val = "0" + val;
-                }
-
-                return val;
-            };
-            let d = moment.duration(this.playing_currentTime, "seconds");
-            let minute = handleFormat(d.minutes());
-            let second = handleFormat(d.seconds());
-
-            return minute + ":" + second;
-        },
-
-        displayDuration: function() {
-            const handleFormat = val => {
-                if (val < 10) {
-                    val = "0" + val;
-                }
-
-                return val;
-            };
-            let d = moment.duration(this.playing_duration, "seconds");
-            let minute = handleFormat(d.minutes());
-            let second = handleFormat(d.seconds());
-
-            return minute + ":" + second;
+    handleFormat(val: number) {
+        let newVal: string = "";
+        if (val < 10) {
+            newVal = "0" + val.toString();
+        } else {
+            newVal = val.toString();
         }
-    },
 
-    methods: {
-        ...mapActions("player", ["getSongUrl"]),
-        ...mapMutations("player", ["updatePlayingInfo", "updateShowLivePage"]),
+        return newVal;
+    }
 
-        getUrlNPlay() {
-            this.isPlaying = false;
+    getUrlNPlay() {
+        this.isPlaying = false;
 
-            this.getSongUrl({
-                id: this.playingId
-            }).then(() => {
-                this.$refs.audio.load();
-                this.playSong();
+        this.getSongUrl({
+            id: this.playingId
+        }).then(() => {
+            this.$refs.audio.load();
+            this.playSong();
+        });
+    }
+
+    // It is the main method
+    playSong() {
+        if (this.playingIndex === undefined) {
+            this.updatePlayingInfo(this.currentSongs[0]);
+        }
+
+        clearInterval(this.timer);
+        if (!this.playingSrc) {
+            this.$notify({
+                title: this.playingName,
+                message: "暂时听不了了,只能试试其他歌曲了"
             });
-        },
-
-        // It is the main method
-        playSong() {
-            if(this.playingIndex === undefined){
-                this.updatePlayingInfo(this.currentSongs[0]);
-            }
-
-            clearInterval(this.timer);
-            if (!this.playingSrc) {
-                this.$notify({
-                    title: this.playingName,
-                    message: "暂时听不了了,只能试试其他歌曲了"
-                });
-                this.timer = setTimeout(() => {
-                    this.nextSong();
-                }, 1000);
-            } else {
-                this.playOrPause();
-            }
-        },
-
-        nextSong() {
-            // console.log('nextSong')
-            this.updatePlayingInfo(this.currentSongs[this.playingIndex + 1]);
-        },
-
-        prevSong() {
-            // console.log('prevSong')
-            this.updatePlayingInfo(this.currentSongs[this.playingIndex - 1]);
-        },
-
-        onPlay() {
-            this.isPlaying = true;
-        },
-
-        onPause() {
-            this.isPlaying = false;
-        },
-
-        onEnd() {
-            this.isPlaying = false;
-            this.nextSong();
-        },
-
-        onTimeupdate(res) {
-            this.playing_currentTime = res.target.currentTime;
-        },
-
-        onLoadedmetadata(res) {
-            this.playing_duration = res.target.duration;
-        },
-
-        playOrPause() {
-            if (this.isPlaying) {
-                // console.log("pause");
-                this.$refs.audio.pause();
-            } else {
-                // console.log("play");
-                const playPromise = this.$refs.audio.play();
-                if (playPromise !== undefined) {
-                    playPromise
-                        .then(() => {
-                            // console.log("此网站可自动播放");
-                        })
-                        .catch(error => {
-                            // console.log("此网站的自动播放功能被浏览器禁用");
-                        });
-                }
-            }
-        },
-
-        showOrHideLivePage() {
-            console.log("showLivePage");
-            // return;
-            // if (this.isShowLivePage) {
-            //     this.updateShowLivePage(false);
-            // } else {
-            //     this.updateShowLivePage(true);
-            // }
+            this.timer = setTimeout(() => {
+                this.nextSong();
+            }, 1000);
+        } else {
+            this.playOrPause();
         }
     }
-};
+
+    nextSong() {
+        // console.log('nextSong')
+        this.updatePlayingInfo(this.currentSongs[this.playingIndex + 1]);
+    }
+
+    prevSong() {
+        // console.log('prevSong')
+        this.updatePlayingInfo(this.currentSongs[this.playingIndex - 1]);
+    }
+
+    onPlay() {
+        this.isPlaying = true;
+    }
+
+    onPause() {
+        this.isPlaying = false;
+    }
+
+    onEnd() {
+        this.isPlaying = false;
+        this.nextSong();
+    }
+
+    onTimeupdate(res: any) {
+        this.playing_currentTime = res.target.currentTime;
+    }
+
+    onLoadedmetadata(res: any) {
+        this.playing_duration = res.target.duration;
+    }
+
+    playOrPause() {
+        if (this.isPlaying) {
+            // console.log("pause");
+            this.$refs.audio.pause();
+        } else {
+            // console.log("play");
+            const playPromise = this.$refs.audio.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log("可播放");
+                    })
+                    .catch((error: any) => {
+                        console.log("无法播放了");
+                    });
+            }
+        }
+    }
+
+    showOrHideLivePage() {
+        // console.log("showLivePage");
+        // return;
+        // if (this.isShowLivePage) {
+        //     this.updateShowLivePage(false);
+        // } else {
+        //     this.updateShowLivePage(true);
+        // }
+    }
+}
 </script>
 <style lang="scss" scoped>
 .el-main {

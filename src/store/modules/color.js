@@ -1,8 +1,10 @@
+
+
+
 export default {
     namespaced: true,
     state: {
         mode: 'day',//default
-
         bgc: 'bgc-day'
     },
     mutations: {

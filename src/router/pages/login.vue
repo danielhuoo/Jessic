@@ -11,65 +11,60 @@
         </div>
     </div>
 </template>
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import { State, Action, Mutation } from "vuex-class";
+import { LoginInfoState } from "../../store/modules/module-types";
+@Component
+export default class Login extends Vue {
+    username: string = "";
+    password: string = "";
 
-<script>
-import { mapActions } from "vuex";
-export default {
-    data() {
-        return {
-            // username: "18002280851",
-            // password: "abc12345",
-
-            username: "",
-            password: ""
-        };
-    },
+    @Action("login", { namespace: "loginInfo" }) login: any;
 
     mounted() {
-        // for test
-        // this.loginBtn();
-    },
-
-    methods: {
-        ...mapActions("userInfo", ["login"]),
-        loginBtn() {
-            // console.log('loginBtn')
-
-            if (!this.username || !this.password) {
-                this.$message({
-                    message: "用户名或密码输入有误，请重新输入",
-                    type: "warning"
-                });
-                return false;
-            }
-
-            const loadingInstance = this.$loading({
-                fullscreen: true,
-                text: "正在拼命登录...",
-                customClass: "loadingBg"
-            });
-
-            this.login({
-                username: this.username,
-                password: this.password
-            }).then(() => {
-                this.$nextTick(() => {
-                    // 以服务的方式调用的 Loading 需要异步关闭
-                    loadingInstance.close();
-                });
-                this.$router.push("/");
-                this.username = "";
-                this.password = "";
-            });
-        },
-
-        loginAsVisitors() {
-            this.username = "18002280851";
-            this.password = "abc12345";
-            this.loginBtn();
-        }
+        // this.login();
+        // this.loginAsVisitors();
     }
-};
+
+    loginBtn(): void {
+        console.log("loginBtn");
+        if (!this.username || !this.password) {
+            this.$message({
+                message: "用户名或密码输入有误，请重新输入",
+                type: "warning"
+            });
+            return;
+        }
+
+        const loadingInstance = this.$loading({
+            fullscreen: true,
+            text: "正在拼命登录...",
+            customClass: "loadingBg"
+        });
+
+        this.login({
+            username: this.username,
+            password: this.password
+        }).then(() => {
+            this.$nextTick(() => {
+                // 以服务的方式调用的 Loading 需要异步关闭
+                loadingInstance.close();
+            });
+            console.log("登录成功");
+            this.$router.push("/");
+            this.username = "";
+            this.password = "";
+        });
+    }
+
+    loginAsVisitors(): void {
+        this.username = "18002280851";
+        this.password = "abc12345";
+        this.loginBtn();
+    }
+}
 </script>
 
 <style scoped>
