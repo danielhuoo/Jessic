@@ -5,13 +5,11 @@ import { loginInfo } from './modules/loginInfo'
 import { songList } from './modules/songList'
 import { player } from './modules/player'
 // import color from './modules/color'
-import api from '../api'
 Vue.use(Vuex)
 
 const store: StoreOptions<RootState> = {
 	strict: process.env.NODE_ENV !== 'production',
 	state: {
-		api: api
 	},
 	modules: {
 		loginInfo,

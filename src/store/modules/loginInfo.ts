@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 import { ActionTree, MutationTree } from 'vuex'
 import { LoginInfoState } from './module-types'
 import { RootState } from '../root-types'
-
+import { request, url } from '../../api/'
 const state: LoginInfoState = {
     uid: 0,//user id
     username: '',
@@ -12,10 +12,10 @@ const state: LoginInfoState = {
 }
 
 const actions: ActionTree<LoginInfoState, RootState> = {
-    login({ rootState, dispatch }, params: any) {
+    login({ dispatch }, params: any) {
         console.log('1 login')
         return new Promise((resolve) => {
-            rootState.api.request(rootState.api.login,
+            request(url.login,
                 {
                     phone: params.username,
                     password: params.password
@@ -35,10 +35,10 @@ const actions: ActionTree<LoginInfoState, RootState> = {
 
     },
 
-    getUserDetail({ commit, rootState }, params) {
+    getUserDetail({ commit }, params) {
         console.log('3 getUserDetail')
         return new Promise((resolve) => {
-            rootState.api.request(rootState.api.getUserDetail, {
+            request(url.getUserDetail, {
                 uid: params.uid
             }).then((response: any) => {
                 console.log('4 getUserDetail api then')

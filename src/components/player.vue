@@ -97,6 +97,10 @@ export default class playerComp extends Vue {
     playing_duration: number = 0;
     timer: any = null;
 
+    $refs!: {
+        audio: HTMLFormElement;
+    };
+
     get currentSongs() {
         return this.songListStore.currentSongs;
     }
@@ -129,13 +133,13 @@ export default class playerComp extends Vue {
     }
 
     get playingProgress() {
-        if (!this.playing_duration) {
-            return;
+        let percentage: number = 0;
+        if (this.playing_duration) {
+            percentage = Math.floor(
+                (this.playing_currentTime / this.playing_duration) * 100
+            );
         }
 
-        let percentage = Math.floor(
-            (this.playing_currentTime / this.playing_duration) * 100
-        );
         return percentage;
     }
 

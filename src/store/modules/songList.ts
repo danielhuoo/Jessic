@@ -1,7 +1,7 @@
 import { SongListState } from './module-types'
 import { MutationTree, ActionTree, Module } from 'vuex';
 import { RootState } from '../root-types';
-
+import { request, url } from '../../api/'
 const state: SongListState = {
     isLoading: false,
     currentSongs: [],
@@ -42,10 +42,11 @@ const mutations: MutationTree<SongListState> = {
 
 const actions: ActionTree<SongListState, RootState> = {
     // Favourite, Rihhana and so on...
-    getPlayListInfo({ rootState, commit, dispatch }) {
+    getPlayListInfo({ rootState, commit, dispatch }): any {
         console.log('getPlayListInfo')
-        rootState.api.request(rootState.api.getPlayListInfo, {
-            uid: rootState.loginInfo.uid,
+        const rs: any = rootState
+        request(url.getPlayListInfo, {
+            uid: rs.loginInfo.uid,
         }).then((response: any) => {
             const res = response.data;
             commit('updatePlayListInfo', {
@@ -57,12 +58,12 @@ const actions: ActionTree<SongListState, RootState> = {
     },
 
     // details of a specific list, containing id of songs
-    getPlayListDetail({ state, rootState, dispatch, commit }) {
+    getPlayListDetail({ state, dispatch, commit }) {
         console.log('getPlayListDetail')
         commit('updateLoadingStatus', {
             status: true
         })
-        rootState.api.request(rootState.api.getPlayListDetail, {
+        request(url.getPlayListDetail, {
             id: state.playListInfo[state.selectedListIndex].id
         }).then((response: any) => {
             console.log(response.data)
@@ -70,7 +71,7 @@ const actions: ActionTree<SongListState, RootState> = {
         })
     },
 
-    getSongsList({ commit, rootState }, params) {
+    getSongsList({ commit }, params) {
         console.log('getSongsList')
         const items = params.res.privileges
         let ids = []
@@ -78,7 +79,7 @@ const actions: ActionTree<SongListState, RootState> = {
             ids.push(items[i].id)
         }
 
-        rootState.api.request(rootState.api.getSongDetail, {
+        request(url.getSongDetail, {
             ids: ids.toString()
         }).then((response: any) => {
             const res = response.data;

@@ -1,7 +1,7 @@
 import { PlayerState } from './module-types'
 import { Module, MutationTree, ActionTree } from 'vuex';
 import { RootState } from '../root-types';
-
+import { request, url } from '../../api'
 const initState = () => {
     const state: PlayerState = {
         playingIndex: 0,// index of the list
@@ -47,13 +47,13 @@ const mutations: MutationTree<PlayerState> = {
 
 
 const actions: ActionTree<PlayerState, RootState> = {
-    getSongUrl({ rootState, commit }, params) {
+    getSongUrl({ commit }, params) {
         // console.log('getSongUrl')
         commit('updateUrlStatus', {
             status: true
         })
         return new Promise((resolve) => {
-            rootState.api.request(rootState.api.getSongUrl, {
+            request(url.getSongUrl, {
                 id: params.id
             }).then((response: any) => {
                 const song = response.data.data[0]
