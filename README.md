@@ -10,9 +10,9 @@ Languages：中文 | [English](README_en.md)
 
 ## 界面
 
-![login.png](http://psb5eq4ez.bkt.clouddn.com/Jessic/login.png)
+![login.png](https://raw.githubusercontent.com/danielhuoo/Jessic/master/login.png)
 
-![main.png](http://psb5eq4ez.bkt.clouddn.com/Jessic/main.png)
+![main.png](https://raw.githubusercontent.com/danielhuoo/Jessic/master/main.png)
 
 这个项目是我为了练习Vue而搭建的，前后花了两个星期。实现的功能不多，但也是比较复杂和关键的功能，包括歌曲播放、选歌、切换歌单等。
 使用的技术栈：Vue, Vuex, Vue-router, elementUI, axios, sass。

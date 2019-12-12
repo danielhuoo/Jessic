@@ -10,9 +10,9 @@ You can have a look at [Demo](http://music.jessic.xyz).
 
 ## Interface
 
-![login.png](http://psb5eq4ez.bkt.clouddn.com/Jessic/login.png)
+![login.png](https://raw.githubusercontent.com/danielhuoo/Jessic/master/login.png)
 
-![main.png](http://psb5eq4ez.bkt.clouddn.com/Jessic/main.png)
+![main.png](https://raw.githubusercontent.com/danielhuoo/Jessic/master/main.png)
 
 This project is for practicing Vue. It takes me about two weeks. Although there are not many functions implemented, they are also complex and critical functions, including song playback, song selection, and switching song lists.
 
