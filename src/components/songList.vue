@@ -21,6 +21,22 @@
             <el-table-column prop="name" label="歌曲" v-bind:class="bgc"></el-table-column>
             <el-table-column prop="ar[0].name" label="歌手" v-bind:class="bgc"></el-table-column>
             <el-table-column prop="al.name" label="专辑" v-bind:class="bgc"></el-table-column>
+            <el-table-column label="操作" v-bind:class="bgc">
+                <template slot-scope="scope">
+                    <el-button
+                        v-if="selectedListIndex==0"
+                        circle
+                        icon="el-icon-star-on"
+                        @click="handleEdit(scope.$index, scope.row,false)"
+                    ></el-button>
+                    <el-button
+                        v-if="selectedListIndex!=0"
+                        circle
+                        icon="el-icon-star-off"
+                        @click="handleEdit(scope.$index, scope.row,true)"
+                    ></el-button>
+                </template>
+            </el-table-column>
         </el-table>
     </div>
 </template>
@@ -40,6 +56,9 @@ export default class songListComp extends Vue {
 
     @Mutation("updatePlayingInfo", { namespace: "player" })
     updatePlayingInfo: any;
+
+    @Action("likeTheSong", { namespace: "songList" })
+    likeTheSong: any;
 
     playerHeight: number = 80;
     windowHeight: number = document.documentElement.clientHeight;
@@ -76,7 +95,23 @@ export default class songListComp extends Vue {
         return "bgc-day";
     }
 
+    handleEdit(index: number, row: any, isLike: boolean) {
+        let message: string = "";
+        if (isLike) {
+            message = "已添加至列表“我喜欢”";
+        } else {
+            message = "已被移出列表“我喜欢”";
+        }
+        this.likeTheSong({ id: row.id }).then(() => {
+            this.$notify({
+                title: row.name,
+                message: message
+            });
+        });
+    }
+
     playThisSong(row: any) {
+        console.log(row);
         this.updatePlayingInfo(row);
     }
 
@@ -89,8 +124,6 @@ export default class songListComp extends Vue {
 </script>
 
 <style lang="scss">
-#songList {
-}
 .el-table {
     .playingSong {
         color: #409eff;

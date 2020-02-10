@@ -80,12 +80,12 @@ export default class playerComp extends Vue {
     @State("songList") songListStore!: SongListState;
     @State("player") playerStore!: PlayerState;
 
-    @Action("getSongUrl", { namespace: "player" })
-    getSongUrl: any;
     @Mutation("updatePlayingInfo", { namespace: "player" })
     updatePlayingInfo: any;
     @Mutation("updateShowLivePage", { namespace: "player" })
     updateShowLivePage: any;
+    @Mutation("updatePlayingSrc", { namespace: "player" })
+    updatePlayingSrc: any;
 
     @Watch("playingId")
     onPlayingIdChanged() {
@@ -174,13 +174,11 @@ export default class playerComp extends Vue {
 
     getUrlNPlay() {
         this.isPlaying = false;
-
-        this.getSongUrl({
-            id: this.playingId
-        }).then(() => {
-            this.$refs.audio.load();
-            this.playSong();
-        });
+        this.updatePlayingSrc({
+            songUrl : `https://music.163.com/song/media/outer/url?id=${this.playingId}.mp3`
+        })
+        this.$refs.audio.load();
+        this.playSong();
     }
 
     // It is the main method

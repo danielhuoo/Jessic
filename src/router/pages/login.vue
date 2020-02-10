@@ -31,14 +31,14 @@ export default class Login extends Vue {
     loginBtn(): void {
         console.log("loginBtn");
         if (!this.username || !this.password) {
-            this['$message']({
+            this["$message"]({
                 message: "用户名或密码输入有误，请重新输入",
                 type: "warning"
             });
             return;
         }
 
-        const loadingInstance = this['$loading']({
+        const loadingInstance = this["$loading"]({
             fullscreen: true,
             text: "正在拼命登录...",
             customClass: "loadingBg"

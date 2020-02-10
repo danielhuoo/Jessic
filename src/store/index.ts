@@ -18,6 +18,7 @@ const store: StoreOptions<RootState> = {
 	},
 	actions: {
 		removeAllStates({ commit }) {
+			console.log('removeAllStates')
 			commit('loginInfo/removeState')
 			commit('songList/removeState')
 			commit('player/removeState')

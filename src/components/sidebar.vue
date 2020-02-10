@@ -92,9 +92,6 @@ export default class sidebarComp extends Vue {
 }
 </script>
 <style scoped lang="scss">
-#sidebar {
-    // border: 1px solid red;
-}
 .avatarBox {
     margin-top: 20px;
     text-align: center;

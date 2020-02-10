@@ -9,7 +9,8 @@ export default {
     name: "app",
     components: {},
     data() {
-        return {};
+        return {
+        };
     },
     mounted() {
         this.$router.push("/login");
