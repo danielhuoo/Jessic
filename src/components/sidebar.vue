@@ -6,13 +6,14 @@
                     <div slot="content">
                         <el-button type="danger" round @click="logout">退出账号</el-button>
                     </div>
-                    <img :src="avatarUrl" alt class="el-dropdown-link">
+                    <img :src="avatarUrl" alt class="el-dropdown-link" />
                 </el-tooltip>
 
                 <el-row class="username">{{nickname}}</el-row>
             </el-header>
 
             <el-main>
+                <!-- 找不到能默认展开菜单的方法 -->
                 <el-menu default-active="myList">
                     <el-submenu index="myList">
                         <template slot="title">
@@ -39,7 +40,7 @@ import { State, Action, Mutation, namespace } from "vuex-class";
 import { LoginInfoState, SongListState } from "../store/modules/module-types";
 @Component
 export default class sidebarComp extends Vue {
-    @State("loginInfo") loginInfo!: LoginInfoState; //為什麼不用指定namespace 呢？
+    @State("loginInfo") loginInfo!: LoginInfoState; //為什麼不用指定namespace呢？
     @State("songList") songList!: SongListState;
     @Action("removeAllStates")
     removeAllStates: any;
@@ -50,20 +51,22 @@ export default class sidebarComp extends Vue {
     @Mutation("updateSelectedListIndex", { namespace: "songList" })
     updateSelectedListIndex: any;
 
-    // To display the avatar and nickname on the sidebar
+    // To display the avatar and nickname
     get avatarUrl(): string {
         return this.loginInfo.avatarUrl;
     }
 
+    // To display the nickname
     get nickname(): string {
         return this.loginInfo.nickname;
     }
 
-    // To display the playlists on the sidebar
+    // To display the playlists
     get playListInfo(): Array<any> {
         return this.songList.playListInfo;
     }
 
+    // handle the event of selecting a songList
     handleSelect(index: number) {
         this.updateSelectedListIndex({
             selectedListIndex: index
@@ -72,6 +75,7 @@ export default class sidebarComp extends Vue {
         this.getPlayListDetail();
     }
 
+    // logout the current account
     logout() {
         console.log("logout");
         this.$confirm("是否退出账号?", {

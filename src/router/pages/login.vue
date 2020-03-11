@@ -28,17 +28,28 @@ export default class Login extends Vue {
         // this.loginAsVisitors();
     }
 
+    closeLoading(ins: any): void {
+        this.$nextTick(() => {
+            // 以服务的方式调用的 Loading 需要异步关闭
+            ins.close();
+        });
+    }
+
+    showErrorMsg(): void {
+        this.$message({
+            message: "用户名或密码输入有误，请重新输入",
+            type: "warning"
+        });
+    }
+
     loginBtn(): void {
         console.log("loginBtn");
         if (!this.username || !this.password) {
-            this["$message"]({
-                message: "用户名或密码输入有误，请重新输入",
-                type: "warning"
-            });
+            this.showErrorMsg();
             return;
         }
 
-        const loadingInstance = this["$loading"]({
+        const loadingInstance = this.$loading({
             fullscreen: true,
             text: "正在拼命登录...",
             customClass: "loadingBg"
@@ -47,16 +58,18 @@ export default class Login extends Vue {
         this.login({
             username: this.username,
             password: this.password
-        }).then(() => {
-            this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                loadingInstance.close();
+        })
+            .then(() => {
+                this.closeLoading(loadingInstance);
+                // console.log("登录成功");
+                this.username = "";
+                this.password = "";
+                this.$router.push("/");
+            })
+            .catch(() => {
+                this.closeLoading(loadingInstance);
+                this.showErrorMsg();
             });
-            console.log("登录成功");
-            this.$router.push("/");
-            this.username = "";
-            this.password = "";
-        });
     }
 
     loginAsVisitors(): void {
@@ -81,11 +94,10 @@ export default class Login extends Vue {
 
 .loginBox {
     width: 200px;
-    height: 100%;
-    display: flex;
-    display: -webkit-box;
-    align-items: center;
-    margin: 0 auto;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .inputs {

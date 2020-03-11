@@ -1,6 +1,5 @@
 <template>
     <div id="songList">
-        <!-- <el-row>{{songListName}}</el-row> -->
         <!-- <el-row v-show="isReady">
             <el-button type="primary" plain :click="playSelectedList">播放此歌单</el-button>
         </el-row>-->
@@ -47,10 +46,7 @@ import { State, Action, Mutation } from "vuex-class";
 import { SongListState, PlayerState } from "../store/modules/module-types";
 @Component
 export default class songListComp extends Vue {
-    // get songListName() {
-    //     return this.playListInfo[this.selectedListIndex].name;
-    // }
-
+    
     @State("songList") songList!: SongListState;
     @State("player") playerStore!: PlayerState;
 
@@ -64,7 +60,7 @@ export default class songListComp extends Vue {
     windowHeight: number = document.documentElement.clientHeight;
 
     get tableHeight() {
-        return this.windowHeight - this.playerHeight + "px";
+        return `${this.windowHeight - this.playerHeight}px`;
     }
 
     get currentSongs() {
@@ -95,13 +91,11 @@ export default class songListComp extends Vue {
         return "bgc-day";
     }
 
-    handleEdit(index: number, row: any, isLike: boolean) {
-        let message: string = "";
-        if (isLike) {
-            message = "已添加至列表“我喜欢”";
-        } else {
-            message = "已被移出列表“我喜欢”";
-        }
+    handleEdit(index: number, row: any, isLike: boolean): void {
+        let message: string;
+        isLike
+            ? (message = "已添加至列表“我喜欢”")
+            : (message = "已被移出列表“我喜欢”");
         this.likeTheSong({ id: row.id }).then(() => {
             this.$notify({
                 title: row.name,
@@ -110,15 +104,18 @@ export default class songListComp extends Vue {
         });
     }
 
-    playThisSong(row: any) {
-        console.log(row);
+    playThisSong(row: any): void {
+        console.log(`play song: ${row.name}`);
         this.updatePlayingInfo(row);
     }
 
-    tableRowClassName({ row, rowIndex }: any) {
+    // show css style on the list item that the song is playing
+    tableRowClassName({ row, rowIndex }: any): string {
+        let className: string = "";
         if (rowIndex === this.playingIndex && row.id === this.playingId) {
-            return "playingSong";
+            className = "playingSong";
         }
+        return className;
     }
 }
 </script>

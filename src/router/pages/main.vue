@@ -28,9 +28,6 @@
                     </el-container>
                 </el-container>
             </el-carousel-item>
-            <el-carousel-item name="livePage">
-                <!-- <live></live> -->
-            </el-carousel-item>
         </el-carousel>
 
         <playerComp v-bind:class="bgc"></playerComp>
@@ -42,20 +39,14 @@ import Component from "vue-class-component";
 import sidebarComp from "../../components/sidebar.vue";
 import playerComp from "../../components/player.vue";
 import songListComp from "../../components/songList.vue";
-// import live from "../../components/live";
-// import headbar from "../../components/headbar";
-// import { mapActions, mapState, mapMutations } from "vuex";
 @Component({
     components: {
         songListComp,
         sidebarComp,
         playerComp
-        // live,
-        // headbar
     }
 })
 export default class mainPage extends Vue {
-    timer: boolean = false;
     playerHeight: number = 80;
     windowHeight: number = document.documentElement.clientHeight;
     windowWidth: number = document.documentElement.clientWidth;
@@ -66,46 +57,18 @@ export default class mainPage extends Vue {
     }
 
     get containerHeight(): string {
-        return this.windowHeight - this.playerHeight + "px";
+        return `${this.windowHeight - this.playerHeight}px`;
     }
-
-    // computed: {
-    //     // ...mapState("sidebar", {
-    //     //     selectedSideBar: state => state.selectedSideBar
-    //     // }),
-
-    //     // ...mapState("player", {
-    //     //     isShowLivePage: state => state.isShowLivePage
-    //     // }),
-
-    //     // ...mapState("color", {
-    //     //     bgc: state => state.bgc
-    //     // })
-    // },
-
-    // watch: {
-    //     isShowLivePage: function() {
-    //         if (this.isShowLivePage) {
-    //             this.$refs.carousel.setActiveItem("livePage");
-    //         } else {
-    //             this.$refs.carousel.setActiveItem("normalPage");
-    //         }
-    //     }
-    // },
 
     initWindowResizeEvt() {
         console.log("initWindowResizeEvt");
+        //此处考虑加上防抖函数
         window.onresize = () => {
             setTimeout(() => {
                 this.windowHeight = document.documentElement.clientHeight;
             }, 400);
         };
     }
-
-    // methods: {
-    //     // ...mapMutations("sidebar", ["updateSelectedSideBar"]),
-
-    // },
 
     mounted() {
         this.initWindowResizeEvt();
@@ -134,10 +97,5 @@ export default class mainPage extends Vue {
 .el-main {
     background-color: #ffffff;
     padding: 0;
-}
-
-.player {
-    // height: 80px;
-    // border: 1px solid red
 }
 </style>

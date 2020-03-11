@@ -22,20 +22,14 @@
             <el-main v-bind:class="bgc">
                 <el-row>
                     <el-col class="albumBox">
-                        <!-- <el-image
-                        style="width: 50px; height: 50px"
-                        :src="playingAlbumPicUrl"
-                        fit="cover"
-                        ></el-image>-->
-                        <!-- 不要用 element的图片，功能太少了 -->
+                        <!-- 不要用 element的图片<el-image>，功能太少了 -->
                         <img
                             :src="playingAlbumPicUrl"
                             width="50px"
                             height="50px"
                             alt
-                            v-on:click="showOrHideLivePage"
                             v-show="playingId"
-                        >
+                        />
                     </el-col>
                     <el-col :span="20">
                         <el-row class="aboveProgess" v-show="playingId">
@@ -64,7 +58,7 @@
                 v-show="false"
                 preload="none"
             >
-                <source v-bind:src="playingSrc" type="audio/mpeg">
+                <source v-bind:src="playingSrc" type="audio/mpeg" />
             </audio>
         </el-container>
     </div>
@@ -89,7 +83,9 @@ export default class playerComp extends Vue {
 
     @Watch("playingId")
     onPlayingIdChanged() {
-        this.getUrlNPlay();
+        this.isPlaying = false;
+        this.$refs.audio.load();
+        this.playSong();
     }
 
     isPlaying: boolean = false;
@@ -132,7 +128,7 @@ export default class playerComp extends Vue {
         return this.playerStore.isShowLivePage;
     }
 
-    get playingProgress() {
+    get playingProgress(): number {
         let percentage: number = 0;
         if (this.playing_duration) {
             percentage = Math.floor(
@@ -143,28 +139,28 @@ export default class playerComp extends Vue {
         return percentage;
     }
 
-    get displayCurrentTime() {
+    get displayCurrentTime(): string {
         let d = moment.duration(this.playing_currentTime, "seconds");
         let minute = this.handleFormat(d.minutes());
         let second = this.handleFormat(d.seconds());
-        return minute + ":" + second;
+        return `${minute}:${second}`;
     }
 
-    get displayDuration() {
+    get displayDuration(): string {
         let d = moment.duration(this.playing_duration, "seconds");
         let minute = this.handleFormat(d.minutes());
         let second = this.handleFormat(d.seconds());
-        return minute + ":" + second;
+        return `${minute}:${second}`;
     }
 
-    get bgc() {
+    get bgc(): string {
         return "bgc-day";
     }
 
-    handleFormat(val: number) {
+    handleFormat(val: number): string {
         let newVal: string = "";
         if (val < 10) {
-            newVal = "0" + val.toString();
+            newVal = `0${val}`;
         } else {
             newVal = val.toString();
         }
@@ -172,67 +168,59 @@ export default class playerComp extends Vue {
         return newVal;
     }
 
-    getUrlNPlay() {
-        this.isPlaying = false;
-        this.updatePlayingSrc({
-            songUrl : `https://music.163.com/song/media/outer/url?id=${this.playingId}.mp3`
-        })
-        this.$refs.audio.load();
-        this.playSong();
-    }
-
     // It is the main method
-    playSong() {
+    playSong(): void {
         if (this.playingIndex === undefined) {
             this.updatePlayingInfo(this.currentSongs[0]);
         }
+        this.playOrPause();
 
-        clearInterval(this.timer);
-        if (!this.playingSrc) {
-            this.$notify({
-                title: this.playingName,
-                message: "暂时听不了了,只能试试其他歌曲了"
-            });
-            this.timer = setTimeout(() => {
-                this.nextSong();
-            }, 1000);
-        } else {
-            this.playOrPause();
-        }
+        // clearInterval(this.timer);
+        // if (!this.playingSrc) {
+        //     this.$notify({
+        //         title: this.playingName,
+        //         message: "暂时听不了了,只能试试其他歌曲了"
+        //     });
+        //     this.timer = setTimeout(() => {
+        //         this.nextSong();
+        //     }, 1000);
+        // } else {
+        //     this.playOrPause();
+        // }
     }
 
-    nextSong() {
+    nextSong(): void {
         // console.log('nextSong')
         this.updatePlayingInfo(this.currentSongs[this.playingIndex + 1]);
     }
 
-    prevSong() {
+    prevSong(): void {
         // console.log('prevSong')
         this.updatePlayingInfo(this.currentSongs[this.playingIndex - 1]);
     }
 
-    onPlay() {
+    onPlay(): void {
         this.isPlaying = true;
     }
 
-    onPause() {
+    onPause(): void {
         this.isPlaying = false;
     }
 
-    onEnd() {
+    onEnd(): void {
         this.isPlaying = false;
         this.nextSong();
     }
 
-    onTimeupdate(res: any) {
+    onTimeupdate(res: any): void {
         this.playing_currentTime = res.target.currentTime;
     }
 
-    onLoadedmetadata(res: any) {
+    onLoadedmetadata(res: any): void {
         this.playing_duration = res.target.duration;
     }
 
-    playOrPause() {
+    playOrPause(): void {
         if (this.isPlaying) {
             // console.log("pause");
             this.$refs.audio.pause();
@@ -246,19 +234,16 @@ export default class playerComp extends Vue {
                     })
                     .catch((error: any) => {
                         console.log("无法播放了");
+                        // this.$notify({
+                        //     title: this.playingName,
+                        //     message: "暂时听不了了,只能试试其他歌曲了"
+                        // });
+                        // this.timer = setTimeout(() => {
+                        //     this.nextSong();
+                        // }, 1000);
                     });
             }
         }
-    }
-
-    showOrHideLivePage() {
-        // console.log("showLivePage");
-        // return;
-        // if (this.isShowLivePage) {
-        //     this.updateShowLivePage(false);
-        // } else {
-        //     this.updateShowLivePage(true);
-        // }
     }
 }
 </script>
